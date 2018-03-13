@@ -8,6 +8,7 @@ from decimal import Decimal
 import json
 
 import numpy as np
+import inspect
 
 
 class DataModel(object):
@@ -15,6 +16,22 @@ class DataModel(object):
         self.__dict__.update(self.defaults())
         self.__dict__.update(data or {})
         self.__dict__.update(self.date_guides())
+        self.__dict__["sets"] = []
+        self.__dict__["gets"] = []
+
+    def __setattr__(self, key, value):
+        caller = inspect.currentframe().f_back
+        self.sets.append([key, caller.f_code.co_filename.split("\\")[-1] + str(caller.f_lineno)])
+        self.__dict__[key] = value
+
+    def __getattribute__(self, item):
+        print(item)
+        if (item == "__dict__" or item == "gets" or item == "defaults"):
+            return object.__getattribute__(self, item)
+        else:
+            caller = inspect.currentframe().f_back
+            object.__getattribute__(self, "gets").append([item, caller.f_code.co_filename.split("\\")[-1] + str(caller.f_lineno)])
+            return object.__getattribute__(self, item)
 
     def defaults(self):
         NLU = 16
