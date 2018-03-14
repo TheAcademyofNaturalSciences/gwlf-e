@@ -318,4 +318,4 @@ def run(z):
     output = WriteOutputFiles.WriteOutput(z)
     # WriteOutputFiles.WriteOutputSumFiles()
 
-    return output
+    return output,z
