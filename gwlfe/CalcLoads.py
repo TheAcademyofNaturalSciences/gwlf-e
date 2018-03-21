@@ -16,27 +16,27 @@ log = logging.getLogger(__name__)
 
 
 def CalculateLoads(z, Y):
-    PrecipitationTotal = 0
-    RunoffTotal = 0
-    GroundWatLETotal = np.zeros(z.WxYrs)
-    EvapotransTotal = 0
-    PtSrcFlowTotal = 0
-    WithdrawalTotal = 0
-    StreamFlowTotal = 0
-    SedYieldTotal = 0
-    ErosionTotal = 0
-    DisNitrTotal = 0
-    DisPhosTotal = 0
-    TotNitrTotal = 0
-    TotPhosTotal = 0
-    AnimalFCTotal = 0
-    WWOrgsTotal = 0
-    SSOrgsTotal = 0
-    UrbOrgsTotal = 0
-    WildOrgsTotal = 0
-    TotalOrgsTotal = 0
-    CMStreamTotal = 0
-    OrgConcTotal = 0
+    z.PrecipitationTotal = 0
+    z.RunoffTotal = 0
+    z.GroundWatLETotal = np.zeros(z.WxYrs)
+    z.EvapotransTotal = 0
+    z.PtSrcFlowTotal = 0
+    z.WithdrawalTotal = 0
+    z.StreamFlowTotal = 0
+    z.SedYieldTotal = 0
+    z.ErosionTotal = 0
+    z.DisNitrTotal = 0
+    z.DisPhosTotal = 0
+    z.TotNitrTotal = 0
+    z.TotPhosTotal = 0
+    z.AnimalFCTotal = 0
+    z.WWOrgsTotal = 0
+    z.SSOrgsTotal = 0
+    z.UrbOrgsTotal = 0
+    z.WildOrgsTotal = 0
+    z.TotalOrgsTotal = 0
+    z.CMStreamTotal = 0
+    z.OrgConcTotal = 0
 
     # CALCULATE THE MONTHLY WATER BALANCE FOR STREAM Flow FOR EACH YEAR OF THE ANALYSIS
     for i in range(12):
@@ -60,18 +60,18 @@ def CalculateLoads(z, Y):
         for l in range(z.NRur, z.NLU):
             z.LuRunoff[Y][l] += z.UrbQRunoff[l][i]
 
-        PrecipitationTotal += z.Precipitation[Y][i]
-        RunoffTotal += z.Runoff[Y][i]
-        GroundWatLETotal += z.GroundWatLE[Y][i]
-        EvapotransTotal += z.Evapotrans[Y][i]
-        PtSrcFlowTotal += z.PtSrcFlow[Y][i]
-        WithdrawalTotal += z.Withdrawal[Y][i]
-        StreamFlowTotal += z.StreamFlow[Y][i]
+        z.PrecipitationTotal += z.Precipitation[Y][i]
+        z.RunoffTotal += z.Runoff[Y][i]
+        z.GroundWatLETotal += z.GroundWatLE[Y][i]
+        z.EvapotransTotal += z.Evapotrans[Y][i]
+        z.PtSrcFlowTotal += z.PtSrcFlow[Y][i]
+        z.WithdrawalTotal += z.Withdrawal[Y][i]
+        z.StreamFlowTotal += z.StreamFlow[Y][i]
 
     # CALCULATE ANNUAL NITROGEN  LOADS FROM NORMAL SEPTIC SYSTEMS
-    AnNormNitr = 0
+    z.AnNormNitr = 0
     for i in range(12):
-        AnNormNitr += z.MonthNormNitr[i] * z.NumNormalSys[i]
+        z.AnNormNitr += z.MonthNormNitr[i] * z.NumNormalSys[i]
 
     z.CalendarYr = z.WxYrBeg + (Y - 1)
 
@@ -85,8 +85,8 @@ def CalculateLoads(z, Y):
                 z.SedYield[Y][i] += z.Erosion[Y][m] / z.BSed[m]
 
         z.SedYield[Y][i] = z.SedDelivRatio * z.SedTrans[Y][i] * z.SedYield[Y][i]
-        SedYieldTotal += z.SedYield[Y][i]
-        ErosionTotal += z.Erosion[Y][i]
+        z.SedYieldTotal += z.SedYield[Y][i]
+        z.ErosionTotal += z.Erosion[Y][i]
 
         # CALCULATION OF THE LANDUSE EROSION AND SEDIMENT YIELDS
         for l in range(z.NRur):
@@ -114,15 +114,15 @@ def CalculateLoads(z, Y):
                 z.NConc = z.ManNitr[l]
                 z.PConc = z.ManPhos[l]
 
-            nRunoff = 0.1 * z.NConc * z.RurQRunoff[l][i] * z.Area[l]
-            pRunoff = 0.1 * z.PConc * z.RurQRunoff[l][i] * z.Area[l]
+            z.nRunoff = 0.1 * z.NConc * z.RurQRunoff[l][i] * z.Area[l]
+            z.pRunoff = 0.1 * z.PConc * z.RurQRunoff[l][i] * z.Area[l]
 
-            z.DisNitr[Y][i] += nRunoff
-            z.DisPhos[Y][i] += pRunoff
-            z.LuTotNitr[Y][l] += nRunoff
-            z.LuTotPhos[Y][l] += pRunoff
-            z.LuDisNitr[Y][l] += nRunoff
-            z.LuDisPhos[Y][l] += pRunoff
+            z.DisNitr[Y][i] += z.nRunoff
+            z.DisPhos[Y][i] += z.pRunoff
+            z.LuTotNitr[Y][l] += z.nRunoff
+            z.LuTotPhos[Y][l] += z.pRunoff
+            z.LuDisNitr[Y][l] += z.nRunoff
+            z.LuDisPhos[Y][l] += z.pRunoff
 
             # ADD SOLID RURAL NUTRIENTS
             z.LuTotNitr[Y][l] += 0.001 * z.SedDelivRatio * z.ErosWashoff[l][i] * z.SedNitr
@@ -162,10 +162,10 @@ def CalculateLoads(z, Y):
         z.TotPhos[Y][i] += z.GroundPhos[Y][i] + z.PointPhos[i]
 
         # ADD SEPTIC SYSTEM SOURCES TO MONTHLY DISSOLVED NUTRIENT TOTALS
-        if GroundWatLETotal[Y] <= 0:
-            GroundWatLETotal[Y] = 0.0001
+        if z.GroundWatLETotal[Y] <= 0:
+            z.GroundWatLETotal[Y] = 0.0001
 
-        z.MonthNormNitr[i] = AnNormNitr * z.GroundWatLE[Y][i] / GroundWatLETotal[Y]
+        z.MonthNormNitr[i] = z.AnNormNitr * z.GroundWatLE[Y][i] / z.GroundWatLETotal[Y]
 
         z.DisSeptNitr = (z.MonthNormNitr[i]
                          + z.MonthPondNitr[i]
@@ -189,24 +189,24 @@ def CalculateLoads(z, Y):
         z.SepticP[Y][i] += z.DisSeptPhos
 
         # ANNUAL TOTALS
-        DisNitrTotal += z.DisNitr[Y][i]
-        DisPhosTotal += z.DisPhos[Y][i]
-        TotNitrTotal += z.TotNitr[Y][i]
-        TotPhosTotal += z.TotPhos[Y][i]
+        z.DisNitrTotal += z.DisNitr[Y][i]
+        z.DisPhosTotal += z.DisPhos[Y][i]
+        z.TotNitrTotal += z.TotNitr[Y][i]
+        z.TotPhosTotal += z.TotPhos[Y][i]
 
         # UPDATE ANNUAL SEPTIC SYSTEM LOADS
         z.SepticNitr[Y] += z.DisSeptNitr
         z.SepticPhos[Y] += z.DisSeptPhos
 
         # Annual pathogen totals
-        AnimalFCTotal += z.AnimalFC[Y][i]
-        WWOrgsTotal += z.WWOrgs[Y][i]
-        SSOrgsTotal += z.SSOrgs[Y][i]
-        UrbOrgsTotal += z.UrbOrgs[Y][i]
-        WildOrgsTotal += z.WildOrgs[Y][i]
-        TotalOrgsTotal += z.TotalOrgs[Y][i]
-        CMStreamTotal += z.CMStream[Y][i]
-        OrgConcTotal += z.OrgConc[Y][i]
+        z.AnimalFCTotal += z.AnimalFC[Y][i]
+        z.WWOrgsTotal += z.WWOrgs[Y][i]
+        z.SSOrgsTotal += z.SSOrgs[Y][i]
+        z.UrbOrgsTotal += z.UrbOrgs[Y][i]
+        z.WildOrgsTotal += z.WildOrgs[Y][i]
+        z.TotalOrgsTotal += z.TotalOrgs[Y][i]
+        z.CMStreamTotal += z.CMStream[Y][i]
+        z.OrgConcTotal += z.OrgConc[Y][i]
 
         # CALCULATE THE VOLUMETRIC STREAM Flow
         z.StreamFlowVol[Y][i] = ((z.StreamFlowLE[Y][i] / 100) * z.TotAreaMeters) / (86400 * z.DaysMonth[Y][i])

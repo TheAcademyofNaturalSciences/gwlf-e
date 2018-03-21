@@ -30,11 +30,11 @@ def CalcCN(z, i, Y, j):
     # Calculate Curve Number (CN)
     for l in range(z.NRur):
         z.Qrun = 0
-        grow_factor = GrowFlag.intval(z.Grow[i])
+        z.grow_factor = GrowFlag.intval(z.Grow[i])
 
         if z.CN[l] > 0:
             if z.Melt <= 0:
-                if grow_factor > 0:
+                if z.grow_factor > 0:
                     # growing season
                     if z.AMC5 >= 5.33:
                         z.CNum = z.NewCN[2][l]
@@ -103,12 +103,12 @@ def CalcCN(z, i, Y, j):
         return
 
     for l in range(z.NRur, z.NLU):
-        grow_factor = GrowFlag.intval(z.Grow[i])
+        z.grow_factor = GrowFlag.intval(z.Grow[i])
 
         # Find curve number
         if z.CNI[1][l] > 0:
             if z.Melt <= 0:
-                if grow_factor > 0:
+                if z.grow_factor > 0:
                     # Growing season
                     if z.AMC5 >= 5.33:
                         z.CNumImperv = z.CNI[2][l]
@@ -136,7 +136,7 @@ def CalcCN(z, i, Y, j):
 
         if z.CNP[1][l] > 0:
             if z.Melt <= 0:
-                if grow_factor > 0:
+                if z.grow_factor > 0:
                     # Growing season
                     if z.AMC5 >= 5.33:
                         z.CNumPerv = z.CNP[2][l]
@@ -162,18 +162,12 @@ def CalcCN(z, i, Y, j):
             if z.Water >= 0.2 * z.CNumPervReten:
                 z.QrunP[l] = (z.Water - 0.2 * z.CNumPervReten) ** 2 / (z.Water + 0.8 * z.CNumPervReten)
 
-        lu = l - z.NRur
-
+        z.lu = l - z.NRur
         if z.UrbAreaTotal > 0:
-            z.UrbanQTotal += ((z.QrunI[l] * (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))
-                              + z.QrunP[l] * (1 - (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))))
-                              * z.Area[l] / z.UrbAreaTotal)
+            z.UrbanQTotal += ((z.QrunI[l] * (z.Imper[l] * (1 - z.ISRR[z.lu]) * (1 - z.ISRA[z.lu]))+ z.QrunP[l] * (1 - (z.Imper[l] * (1 - z.ISRR[z.lu]) * (1 - z.ISRA[z.lu]))))* z.Area[l] / z.UrbAreaTotal)
 
         if z.AreaTotal > 0:
-            z.UncontrolledQ += ((z.QrunI[l] * (z.Imper[l] * (1 - z.ISRR[lu]) *
-                                (1 - z.ISRA[lu])) + z.QrunP[l] * (1 - (z.Imper[l] *
-                                (1 - z.ISRR[lu]) * (1 - z.ISRA[lu])))) *
-                                z.Area[l] / z.AreaTotal)
+            z.UncontrolledQ += ((z.QrunI[l] * (z.Imper[l] * (1 - z.ISRR[z.lu]) *(1 - z.ISRA[z.lu])) + z.QrunP[l] * (1 - (z.Imper[l] *(1 - z.ISRR[z.lu]) * (1 - z.ISRA[z.lu])))) *z.Area[l] / z.AreaTotal)
 
         z.WashImperv[l] = (1 - math.exp(-1.81 * z.QrunI[l])) * z.ImpervAccum[l]
         z.ImpervAccum[l] -= z.WashImperv[l]
@@ -181,8 +175,7 @@ def CalcCN(z, i, Y, j):
         z.WashPerv[l] = (1 - math.exp(-1.81 * z.QrunP[l])) * z.PervAccum[l]
         z.PervAccum[l] -= z.WashPerv[l]
 
-        z.UrbQRunoff[l][i] += (z.QrunI[l] * (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))
-                               + z.QrunP[l] * (1 - (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))))
+        z.UrbQRunoff[l][i] += (z.QrunI[l] * (z.Imper[l] * (1 - z.ISRR[z.lu]) * (1 - z.ISRA[z.lu]))+ z.QrunP[l] * (1 - (z.Imper[l] * (1 - z.ISRR[z.lu]) * (1 - z.ISRA[z.lu]))))
 
     z.AdjUrbanQTotal = z.UrbanQTotal
 
@@ -215,9 +208,9 @@ def BasinWater(z, i, Y, j):
 
         # Basin cleaning
         if z.CleanMon > 0:
-            threshold = z.BasinDeadStorage + 0.1 * (z.Capacity - z.BasinDeadStorage)
+            z.threshold = z.BasinDeadStorage + 0.1 * (z.Capacity - z.BasinDeadStorage)
             # TODO: What is `i`?
-            if z.CleanSwitch == 0 and i >= z.CleanMon and z.BasinVol < threshold:
+            if z.CleanSwitch == 0 and i >= z.CleanMon and z.BasinVol < z.threshold:
                 for q in range(z.Nqual):
                     z.SolidBasinMass[q] = 0
                     z.DisBasinMass[q] = 0
@@ -272,13 +265,10 @@ def BasinWater(z, i, Y, j):
 
                 # TODO: Should 11 be NRur + 1?
                 # What is this trying to do?
-                lu = l - 11
+                z.lu = l - 11
 
                 if z.Area[l] > 0:
-                    z.SurfaceLoad = (((z.LoadRateImp[l][q] * z.WashImperv[l] * ((z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))
-                                       * (z.SweepFrac[i] + ((1 - z.SweepFrac[i]) * ((1 - z.UrbSweepFrac) * z.Area[l]) / z.Area[l])))
-                                      + z.LoadRatePerv[l][q] * z.WashPerv[l] * (1 - (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))))
-                                      * z.Area[l]) - z.UrbLoadRed)
+                    z.SurfaceLoad = (((z.LoadRateImp[l][q] * z.WashImperv[l] * ((z.Imper[l] * (1 - z.ISRR[z.lu]) * (1 - z.ISRA[z.lu]))* (z.SweepFrac[i] + ((1 - z.SweepFrac[i]) * ((1 - z.UrbSweepFrac) * z.Area[l]) / z.Area[l])))+ z.LoadRatePerv[l][q] * z.WashPerv[l] * (1 - (z.Imper[l] * (1 - z.ISRR[z.lu]) * (1 - z.ISRA[z.lu]))))* z.Area[l]) - z.UrbLoadRed)
                 else:
                     z.SurfaceLoad = 0
 

@@ -23,25 +23,25 @@ TONNE_TO_KG = 1000
 
 def WriteOutput(z):
     # DIMENSION VARIABLES FOR PREDICT CALCULATION AND SCENARIO FILE
-    AvOtherLuSed = 0
-    AvOtherLuNitr = 0
-    AvOtherLuPhos = 0
-    TotSewerSys = 0
-    TotNormSys = 0
-    TotShortSys = 0
-    TotSeptSys = 0
-    TotAvLuErosion = 0
-    AvTotalSed = 0
-    AvDisN = 0
-    AvTotalN = 0
-    AvDisP = 0
-    AvTotalP = 0
-    n2t = 0
-    n6t = 0
-    n13t = 0
-    n24t = 0
+    z.AvOtherLuSed = 0
+    z.AvOtherLuNitr = 0
+    z.AvOtherLuPhos = 0
+    z.TotSewerSys = 0
+    z.TotNormSys = 0
+    z.TotShortSys = 0
+    z.TotSeptSys = 0
+    z.TotAvLuErosion = 0
+    z.AvTotalSed = 0
+    z.AvDisN = 0
+    z.AvTotalN = 0
+    z.AvDisP = 0
+    z.AvTotalP = 0
+    z.n2t = 0
+    z.n6t = 0
+    z.n13t = 0
+    z.n24t = 0
 
-    AreaSum = np.zeros(12)
+    z.AreaSum = np.zeros(12)
 
     # INSERT VALUES FOR BMP SCENARIO FILE FOR PREDICT APPLICATION
     for l in range(z.NLU):
@@ -79,9 +79,9 @@ def WriteOutput(z):
             z.n6ddn = z.AvLuDisNitr[l]
             z.n13ddp = z.AvLuDisPhos[l]
         else:
-            AvOtherLuSed = AvOtherLuSed + z.AvLuSedYield[l]
-            AvOtherLuNitr = AvOtherLuNitr + z.AvLuTotNitr[l]
-            AvOtherLuPhos = AvOtherLuPhos + z.AvLuTotPhos[l]
+            z.AvOtherLuSed = z.AvOtherLuSed + z.AvLuSedYield[l]
+            z.AvOtherLuNitr = z.AvOtherLuNitr + z.AvLuTotNitr[l]
+            z.AvOtherLuPhos = z.AvOtherLuPhos + z.AvLuTotPhos[l]
 
     z.n2c = 0
     z.n6c = 0
@@ -114,31 +114,30 @@ def WriteOutput(z):
             z.n23b = z.n23b + round(z.Area[l])
 
     # Initial Upland loads
-    InitialUplandN = z.n5 + z.n6 + z.n6b + z.n6c + z.n6d + AvOtherLuNitr
-    if InitialUplandN == 0:
-        InitialUplandN = 0.00000000001  # Fix for Divide-by-Zero error
-    InitialUplandP = z.n12 + z.n13 + z.n13b + z.n13c + z.n13d + AvOtherLuPhos
-    if InitialUplandP == 0:
-        InitialUplandP = 0.00000000001  # Fix for Divide-by-Zero error
-    InitialUplandSed = z.n1 + z.n2 + z.n2b + z.n2c + z.n2d + AvOtherLuSed
-    if InitialUplandSed == 0:
-        InitialUplandSed = 0.00000000001  # Fix for Divide-by-Zero error
+    z.InitialUplandN = z.n5 + z.n6 + z.n6b + z.n6c + z.n6d + z.AvOtherLuNitr
+    if z.InitialUplandN == 0:
+        z.InitialUplandN = 0.00000000001  # Fix for Divide-by-Zero error
+    z.InitialUplandP = z.n12 + z.n13 + z.n13b + z.n13c + z.n13d + z.AvOtherLuPhos
+    if z.InitialUplandP == 0:
+        z.InitialUplandP = 0.00000000001  # Fix for Divide-by-Zero error
+    z.InitialUplandSed = z.n1 + z.n2 + z.n2b + z.n2c + z.n2d + z.AvOtherLuSed
+    if z.InitialUplandSed == 0:
+        z.InitialUplandSed = 0.00000000001  # Fix for Divide-by-Zero error
 
     # FOR POINT SOURCE
-    YrPointNitr = 0
-    YrPointPhos = 0
+    z.YrPointNitr = 0
+    z.YrPointPhos = 0
     for i in range(0, 12):
-        YrPointNitr = YrPointNitr + z.PointNitr[i]
-        YrPointPhos = YrPointPhos + z.PointPhos[i]
+        z.YrPointNitr = z.YrPointNitr + z.PointNitr[i]
+        z.YrPointPhos = z.YrPointPhos + z.PointPhos[i]
 
     # GET THE AVERAGE SEPTIC SYSTEM INFORMATION
     if z.SepticFlag is YesOrNo.YES:
         for i in range(12):
-            TotSewerSys = TotSewerSys + z.NumSewerSys[i]
-            TotNormSys = TotNormSys + z.NumNormalSys[i]
-            TotShortSys = TotShortSys + z.NumShortSys[i]
-            TotSeptSys = (TotSeptSys + z.NumNormalSys[i] + z.NumShortSys[i] +
-                          z.NumPondSys[i] + z.NumDischargeSys[i])
+            z.TotSewerSys = z.TotSewerSys + z.NumSewerSys[i]
+            z.TotNormSys = z.TotNormSys + z.NumNormalSys[i]
+            z.TotShortSys = z.TotShortSys + z.NumShortSys[i]
+            z.TotSeptSys = (z.TotSeptSys + z.NumNormalSys[i] + z.NumShortSys[i] + z.NumPondSys[i] + z.NumDischargeSys[i])
 
     # Set the conversion factors from metric to english
     SedConvert = 1000
@@ -199,17 +198,17 @@ def WriteOutput(z):
     z.AvUrbOrgsSum = z.n148
 
     # Get the FC reduction for monthly loads
-    UrbanFCFrac = 0
-    FarmFCFrac = 0
+    z.UrbanFCFrac = 0
+    z.FarmFCFrac = 0
 
     if z.n139 > 0:
-        FarmFCFrac = z.n145 / z.n139
+        z.FarmFCFrac = z.n145 / z.n139
     if z.n142 > 0:
-        UrbanFCFrac = z.n148 / z.n142
+        z.UrbanFCFrac = z.n148 / z.n142
 
     for i in range(12):
-        z.AvAnimalFC[i] = z.AvAnimalFC[i] * FarmFCFrac
-        z.AvUrbOrgs[i] = z.AvUrbOrgs[i] * UrbanFCFrac
+        z.AvAnimalFC[i] = z.AvAnimalFC[i] * z.FarmFCFrac
+        z.AvUrbOrgs[i] = z.AvUrbOrgs[i] * z.UrbanFCFrac
 
     # Reset the existing urban and animal FC loads to the reduced future loads, n145 and n148
     z.n139 = z.n145
@@ -259,7 +258,7 @@ def WriteOutput(z):
             z.n13 = round(z.AvLuTotPhos[l] * NPConvert)
 
             if z.Area[l] > 0:
-                AreaSum[2] = AreaSum[2] + z.Area[l]
+                z.AreaSum[2] = z.AreaSum[2] + z.Area[l]
         elif z.Landuse[l] is LandUse.CROPLAND:
             z.AvLuSedYield[l] = z.n1
             z.AvLuTotNitr[l] = z.n5
@@ -277,7 +276,7 @@ def WriteOutput(z):
             z.n12 = round(z.AvLuTotPhos[l] * NPConvert)
 
             if z.Area[l] > 0:
-                AreaSum[3] = AreaSum[3] + z.Area[l]
+                z.AreaSum[3] = z.AreaSum[3] + z.Area[l]
         elif z.Landuse[l] is LandUse.UNPAVED_ROAD:
             z.AvLuSedYield[l] = z.n2d
             z.AvLuTotNitr[l] = z.n6d
@@ -295,7 +294,7 @@ def WriteOutput(z):
             z.n13d = round(z.AvLuTotPhos[l] * NPConvert)
 
             if z.Area[l] > 0:
-                AreaSum[6] = AreaSum[6] + z.Area[l]
+                z.AreaSum[6] = z.AreaSum[6] + z.Area[l]
 
         if z.AvLuDisNitr[l] > z.AvLuTotNitr[l]:
             z.AvLuDisNitr[l] = z.AvLuTotNitr[l]
@@ -303,12 +302,12 @@ def WriteOutput(z):
             z.AvLuDisPhos[l] = z.AvLuTotPhos[l]
 
         # GET THE AVERAGE TOTAL LOADS BY SOURCE
-        TotAvLuErosion = TotAvLuErosion + z.AvLuErosion[l]
-        AvTotalSed = AvTotalSed + z.AvLuSedYield[l]
-        AvDisN = AvDisN + z.AvLuDisNitr[l]
-        AvTotalN = AvTotalN + z.AvLuTotNitr[l]
-        AvDisP = AvDisP + z.AvLuDisPhos[l]
-        AvTotalP = AvTotalP + z.AvLuTotPhos[l]
+        z.TotAvLuErosion = z.TotAvLuErosion + z.AvLuErosion[l]
+        z.AvTotalSed = z.AvTotalSed + z.AvLuSedYield[l]
+        z.AvDisN = z.AvDisN + z.AvLuDisNitr[l]
+        z.AvTotalN = z.AvTotalN + z.AvLuTotNitr[l]
+        z.AvDisP = z.AvDisP + z.AvLuDisPhos[l]
+        z.AvTotalP = z.AvTotalP + z.AvLuTotPhos[l]
 
     # Reset the urban landuse values
     for l in range(z.NRur, z.NLU):
@@ -325,7 +324,7 @@ def WriteOutput(z):
                 z.AvLuDisPhos[l] = z.AvLuTotPhos[l]
 
             if z.Area[l] > 0:
-                AreaSum[0] = AreaSum[0] + z.Area[l]
+                z.AreaSum[0] = z.AreaSum[0] + z.Area[l]
         elif z.n23b > 0 and z.Landuse[l] in [LandUse.MD_MIXED, LandUse.HD_MIXED,
                                              LandUse.MD_RESIDENTIAL, LandUse.HD_RESIDENTIAL]:
             z.AvLuSedYield[l] = z.n2b * z.Area[l] / z.n23b
@@ -340,7 +339,7 @@ def WriteOutput(z):
                 z.AvLuDisPhos[l] = z.AvLuTotPhos[l]
 
             if z.Area[l] > 0:
-                AreaSum[1] = AreaSum[1] + z.Area[l]
+                z.AreaSum[1] = z.AreaSum[1] + z.Area[l]
 
     z.n2c = round(z.n2c * SedConvert)
     z.n6c = round(z.n6c * NPConvert)
@@ -362,31 +361,27 @@ def WriteOutput(z):
     z.n22 = round(z.AreaTotal, 0)
 
     # COMPLETE CALCULATING THE TOTAL SOURCE LOADS FOR SEDIMENT, N AND P
-    AvTotalSed = (AvTotalSed + (((z.AvStreamBankErosSum / 1000) +
-                  ((z.AvTileDrainSedSum / 1000)) * z.RetentFactorSed * (1 - z.AttenTSS))))
-    AvDisN = (AvDisN + ((z.AvGroundNitrSum + YrPointNitr + z.AvSeptNitr) *
-              z.RetentFactorN * (1 - z.AttenN)))
-    AvTotalN = (AvTotalN + ((z.AvStreamBankNSum + (z.AvGroundNitrSum + z.AvTileDrainNSum +
-                z.AvAnimalNSum + YrPointNitr + z.AvSeptNitr) * z.RetentFactorN * (1 - z.AttenN))))
-    AvDisP = AvDisP + ((z.AvGroundPhosSum + YrPointPhos + z.AvSeptPhos) * z.RetentFactorP * (1 - z.AttenP))
-    AvTotalP = (AvTotalP + ((z.AvStreamBankPSum + (z.AvGroundPhosSum + z.AvTileDrainPSum +
-                z.AvAnimalPSum + YrPointPhos + z.AvSeptPhos) * z.RetentFactorP * (1 - z.AttenP))))
+    z.AvTotalSed = (z.AvTotalSed + (((z.AvStreamBankErosSum / 1000) +((z.AvTileDrainSedSum / 1000)) * z.RetentFactorSed * (1 - z.AttenTSS))))
+    z.AvDisN = (z.AvDisN + ((z.AvGroundNitrSum + z.YrPointNitr + z.AvSeptNitr) *z.RetentFactorN * (1 - z.AttenN)))
+    z.AvTotalN = (z.AvTotalN + ((z.AvStreamBankNSum + (z.AvGroundNitrSum + z.AvTileDrainNSum +z.AvAnimalNSum + z.YrPointNitr + z.AvSeptNitr) * z.RetentFactorN * (1 - z.AttenN))))
+    z.AvDisP = z.AvDisP + ((z.AvGroundPhosSum + z.YrPointPhos + z.AvSeptPhos) * z.RetentFactorP * (1 - z.AttenP))
+    z.AvTotalP = (z.AvTotalP + ((z.AvStreamBankPSum + (z.AvGroundPhosSum + z.AvTileDrainPSum + z.AvAnimalPSum + z.YrPointPhos + z.AvSeptPhos) * z.RetentFactorP * (1 - z.AttenP))))
 
     # OBTAIN THE AVERAGE TOTAL MONTHLY LOADS
-    AvMonDisN = 0
-    AvMonTotN = 0
-    AvMonDisP = 0
-    AvMonTotP = 0
-    AvMonSed = 0
-    AvMonEros = 0
+    z.AvMonDisN = 0
+    z.AvMonTotN = 0
+    z.AvMonDisP = 0
+    z.AvMonTotP = 0
+    z.AvMonSed = 0
+    z.AvMonEros = 0
 
     for i in range(12):
-        AvMonEros = AvMonEros + z.AvErosion[i]
-        AvMonSed = AvMonSed + (z.AvSedYield[i] * z.RetentFactorSed * (1 - z.AttenTSS))
-        AvMonDisN = AvMonDisN + (z.AvDisNitr[i] * z.RetentFactorN * (1 - z.AttenN))
-        AvMonTotN = AvMonTotN + (z.AvTotNitr[i] * z.RetentFactorN * (1 - z.AttenN))
-        AvMonDisP = AvMonDisP + (z.AvDisPhos[i] * z.RetentFactorP * (1 - z.AttenP))
-        AvMonTotP = AvMonTotP + (z.AvTotPhos[i] * z.RetentFactorP * (1 - z.AttenP))
+        z.AvMonEros = z.AvMonEros + z.AvErosion[i]
+        z.AvMonSed = z.AvMonSed + (z.AvSedYield[i] * z.RetentFactorSed * (1 - z.AttenTSS))
+        z.AvMonDisN = z.AvMonDisN + (z.AvDisNitr[i] * z.RetentFactorN * (1 - z.AttenN))
+        z.AvMonTotN = z.AvMonTotN + (z.AvTotNitr[i] * z.RetentFactorN * (1 - z.AttenN))
+        z.AvMonDisP = z.AvMonDisP + (z.AvDisPhos[i] * z.RetentFactorP * (1 - z.AttenP))
+        z.AvMonTotP = z.AvMonTotP + (z.AvTotPhos[i] * z.RetentFactorP * (1 - z.AttenP))
 
     # XXX: These values are not used in our port
     # Obtain the reduction factor to adjust the monthly loads if Scenario reductions applied
@@ -423,32 +418,32 @@ def WriteOutput(z):
     #    AvTotPFrac = 0
 
     # OBTAIN THE MONTHLY SEPTIC SYSTEM AND SEWER POPULATION VALUES
-    z.n47 = round(TotSeptSys / 12)
-    z.n49 = round(TotSeptSys / 12)
-    z.n53 = round(TotSewerSys / 12)
+    z.n47 = round(z.TotSeptSys / 12)
+    z.n49 = round(z.TotSeptSys / 12)
+    z.n53 = round(z.TotSewerSys / 12)
 
     # CONVERT GROUNDWATER N AND P REDUCED LOADS INTO ENGLISH UNIST FOR THE PREDICT SCENARIO FILE
     z.n9 = round(((z.AvGroundNitrSum + z.AvTileDrainNSum) * NPConvert * z.RetentFactorN * (1 - z.AttenN)))
     z.n16 = round(((z.AvGroundPhosSum + z.AvTileDrainPSum) * NPConvert * z.RetentFactorP * (1 - z.AttenP)))
 
     # CONVERT ANNUAL POINT N AND P TO ENGLISH UNITS
-    z.n10 = round((YrPointNitr * NPConvert * z.RetentFactorN * (1 - z.AttenN)))
-    z.n17 = round((YrPointPhos * NPConvert * z.RetentFactorP * (1 - z.AttenP)))
+    z.n10 = round((z.YrPointNitr * NPConvert * z.RetentFactorN * (1 - z.AttenN)))
+    z.n17 = round((z.YrPointPhos * NPConvert * z.RetentFactorP * (1 - z.AttenP)))
 
     # CONVERT AVERAGE SEPTIC N AND P TO ENGLISH UNITS
     z.n11 = round((z.AvSeptNitr * NPConvert * z.RetentFactorN * (1 - z.AttenN)))
     z.n18 = round((z.AvSeptPhos * NPConvert * z.RetentFactorP * (1 - z.AttenP)))
 
     # ENTER THE OTHER SEDIMENT, N AND P INTO FIELDS
-    z.n3 = round(((AvOtherLuSed + ((z.AvTileDrainSedSum * z.RetentFactorSed * (1 - z.AttenTSS)) / 1000)) * SedConvert))
-    z.n7 = round((AvOtherLuNitr * z.RetentFactorN * (1 - z.AttenN) * NPConvert))
-    z.n14 = round((AvOtherLuPhos * z.RetentFactorP * (1 - z.AttenP) * NPConvert))
+    z.n3 = round(((z.AvOtherLuSed + ((z.AvTileDrainSedSum * z.RetentFactorSed * (1 - z.AttenTSS)) / 1000)) * SedConvert))
+    z.n7 = round((z.AvOtherLuNitr * z.RetentFactorN * (1 - z.AttenN) * NPConvert))
+    z.n14 = round((z.AvOtherLuPhos * z.RetentFactorP * (1 - z.AttenP) * NPConvert))
 
     # ADD TURF TO HAY/PASTURE
-    z.n2 = z.n2 + (n2t * SedConvert)
-    z.n6 = z.n6 + (n6t * NPConvert)
-    z.n13 = z.n13 + (n13t * NPConvert)
-    z.n24 = z.n24 + n24t
+    z.n2 = z.n2 + (z.n2t * SedConvert)
+    z.n6 = z.n6 + (z.n6t * NPConvert)
+    z.n13 = z.n13 + (z.n13t * NPConvert)
+    z.n24 = z.n24 + z.n24t
 
     # Multiply sediment loads by 1000 to get them into Kg before writing to PRedICT section of file
     z.n1 = z.n1 * 1000
@@ -469,9 +464,9 @@ def WriteOutput(z):
     # WriteDailyFlowFile
 
     # SET THE SCENARIO VALUES TO LANDUSE LOADS\
-    AvOtherLuSed = 0
-    AvOtherLuNitr = 0
-    AvOtherLuPhos = 0
+    z.AvOtherLuSed = 0
+    z.AvOtherLuNitr = 0
+    z.AvOtherLuPhos = 0
 
     for y in range(z.NYrs):
         z.n2c = 0
@@ -517,9 +512,9 @@ def WriteOutput(z):
                 z.n6t = z.LuTotNitr[y][l]
                 z.n13t = z.LuTotPhos[y][l]
             else:
-                AvOtherLuSed = AvOtherLuSed + z.LuSedYield[y][l]
-                AvOtherLuNitr = AvOtherLuNitr + z.LuTotNitr[y][l]
-                AvOtherLuPhos = AvOtherLuPhos + z.LuTotPhos[y][l]
+                z.AvOtherLuSed = z.AvOtherLuSed + z.LuSedYield[y][l]
+                z.AvOtherLuNitr = z.AvOtherLuNitr + z.LuTotNitr[y][l]
+                z.AvOtherLuPhos = z.AvOtherLuPhos + z.LuTotPhos[y][l]
 
             if z.Landuse[l] in [LandUse.LD_MIXED, LandUse.LD_RESIDENTIAL]:
                 z.n2c = z.n2c + z.LuSedYield[y][l]
@@ -585,17 +580,17 @@ def WriteOutput(z):
         z.UrbOrgsSum[y] = z.n148
 
         # Get the FC reduction for monthly loads
-        UrbanFCFrac = 0
-        FarmFCFrac = 0
+        z.UrbanFCFrac = 0
+        z.FarmFCFrac = 0
 
         if z.n139 > 0:
-            FarmFCFrac = z.n145 / z.n139
+            z.FarmFCFrac = z.n145 / z.n139
         if z.n142 > 0:
-            UrbanFCFrac = z.n148 / z.n142
+            z.UrbanFCFrac = z.n148 / z.n142
 
         for i in range(12):
-            z.AnimalFCSum[y] *= FarmFCFrac
-            z.UrbOrgsSum[y] *= UrbanFCFrac
+            z.AnimalFCSum[y] *= z.FarmFCFrac
+            z.UrbOrgsSum[y] *= z.UrbanFCFrac
 
         # Reduced total pathogen loads
         n150 = z.n145 + z.n146 + z.n147 + z.n148 + z.n149
@@ -608,11 +603,11 @@ def WriteOutput(z):
         z.AnimalNSum[y] = n14b
 
         # FOR ALL LAND USES
-        z.TotDisNitr = 0
-        z.TotTotNitr = 0
-        z.TotDisPhos = 0
-        z.TotTotPhos = 0
-        z.TotSedyield = 0
+        # z.TotDisNitr = 0
+        # z.TotTotNitr = 0
+        # z.TotDisPhos = 0
+        # z.TotTotPhos = 0
+        # z.TotSedyield = 0
 
         for l in range(z.NLU):
             if z.Landuse[l] is LandUse.HAY_PAST:
@@ -687,99 +682,96 @@ def WriteOutput(z):
     # Sum Variables for Aggregate Summary Ouput Files
     # if FirstRun: XXX: Commented out because we don't
     # have the concept of a "first run" in the port.
-    SumNYrs = z.NYrs
-    SumNRur = z.NRur
-    SumNUrb = z.NUrb
-    SumNLU = z.NLU
+    z.SumNYrs = z.NYrs
+    z.SumNRur = z.NRur
+    z.SumNUrb = z.NUrb
+    z.SumNLU = z.NLU
     # SumOpt = z.Opt
-    SumWxYrBeg = z.WxYrBeg
-    SumWxYrEnd = z.WxYrEnd
+    z.SumWxYrBeg = z.WxYrBeg
+    z.SumWxYrEnd = z.WxYrEnd
 
-    if z.NYrs > SumNYrs:
-        SumNYrs = z.NYrs
-    if z.NRur > SumNRur:
-        SumNRur = z.NRur
-    if z.NUrb > SumNUrb:
-        SumNUrb = z.NUrb
-    if z.NLU > SumNLU:
-        SumNLU = z.NLU
+    if z.NYrs > z.SumNYrs:
+        z.SumNYrs = z.NYrs
+    if z.NRur > z.SumNRur:
+        z.SumNRur = z.NRur
+    if z.NUrb > z.SumNUrb:
+        z.SumNUrb = z.NUrb
+    if z.NLU > z.SumNLU:
+        z.SumNLU = z.NLU
     # if z.Opt > SumOpt:
     #    SumOpt = z.Opt
-    if z.WxYrBeg < SumWxYrBeg:
-        SumWxYrBeg = z.WxYrBeg
-    if z.WxYrEnd > SumWxYrEnd:
-        SumWxYrEnd = z.WxYrEnd
+    if z.WxYrBeg < z.SumWxYrBeg:
+        z.SumWxYrBeg = z.WxYrBeg
+    if z.WxYrEnd > z.SumWxYrEnd:
+        z.SumWxYrEnd = z.WxYrEnd
 
     # Which land use sources to include in the totals.
     sources = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
 
     # ha
-    AreaTotal = sum(z.Area[l] for l in sources)
+    z.AreaTotal = sum(z.Area[l] for l in sources)
 
     # kg
-    SumSed = sum(z.AvLuSedYield[l] for l in sources) * TONNE_TO_KG
-    SumSed += z.AvStreamBankErosSum
+    z.SumSed = sum(z.AvLuSedYield[l] for l in sources) * TONNE_TO_KG
+    z.SumSed += z.AvStreamBankErosSum
 
     # kg
-    SumNitr = sum(z.AvLuTotNitr[l] for l in sources)
-    SumNitr += z.AvStreamBankNSum
-    SumNitr += z.AvAnimalNSum * z.RetentFactorN * (1 - z.AttenN)
-    SumNitr += z.AvGroundNitrSum * z.RetentFactorN * (1 - z.AttenN)
-    SumNitr += YrPointNitr * z.RetentFactorN * (1 - z.AttenN)
-    SumNitr += z.AvSeptNitr * z.RetentFactorN * (1 - z.AttenN)
+    z.SumNitr = sum(z.AvLuTotNitr[l] for l in sources)
+    z.SumNitr += z.AvStreamBankNSum
+    z.SumNitr += z.AvAnimalNSum * z.RetentFactorN * (1 - z.AttenN)
+    z.SumNitr += z.AvGroundNitrSum * z.RetentFactorN * (1 - z.AttenN)
+    z.SumNitr += z.YrPointNitr * z.RetentFactorN * (1 - z.AttenN)
+    z.SumNitr += z.AvSeptNitr * z.RetentFactorN * (1 - z.AttenN)
 
     # kg
-    SumPhos = sum(z.AvLuTotPhos[l] for l in sources)
-    SumPhos += z.AvStreamBankPSum
-    SumPhos += z.AvAnimalPSum * z.RetentFactorP * (1 - z.AttenP)
-    SumPhos += z.AvGroundPhosSum * z.RetentFactorP * (1 - z.AttenP)
-    SumPhos += YrPointPhos * z.RetentFactorP * (1 - z.AttenP)
-    SumPhos += z.AvSeptPhos * z.RetentFactorP * (1 - z.AttenP)
+    z.SumPhos = sum(z.AvLuTotPhos[l] for l in sources)
+    z.SumPhos += z.AvStreamBankPSum
+    z.SumPhos += z.AvAnimalPSum * z.RetentFactorP * (1 - z.AttenP)
+    z.SumPhos += z.AvGroundPhosSum * z.RetentFactorP * (1 - z.AttenP)
+    z.SumPhos += z.YrPointPhos * z.RetentFactorP * (1 - z.AttenP)
+    z.SumPhos += z.AvSeptPhos * z.RetentFactorP * (1 - z.AttenP)
 
     # m^3/year
-    MeanFlow = (z.AvStreamFlowSum * CM_TO_M) * (AreaTotal * HA_TO_M2)
+    z.MeanFlow = (z.AvStreamFlowSum * CM_TO_M) * (z.AreaTotal * HA_TO_M2)
 
     # Find index of month with lowest mean flow.
-    LowFlowMonth = z.AvStreamFlow.tolist().index(min(z.AvStreamFlow))
+    z.LowFlowMonth = z.AvStreamFlow.tolist().index(min(z.AvStreamFlow))
 
     # m^3/year
-    MeanLowFlow = (z.AvStreamFlow[LowFlowMonth] * CM_TO_M) * (AreaTotal * HA_TO_M2)
+    z.MeanLowFlow = (z.AvStreamFlow[z.LowFlowMonth] * CM_TO_M) * (z.AreaTotal * HA_TO_M2)
 
     # m^3/second
-    MeanFlowPS = MeanFlow / 31536000
+    z.MeanFlowPS = z.MeanFlow / 31536000
 
     # kg/ha
-    if AreaTotal > 0:
-        LoadingRateSed = SumSed / AreaTotal
-        LoadingRateN = SumNitr / AreaTotal
-        LoadingRateP = SumPhos / AreaTotal
+    if z.AreaTotal > 0:
+        z.LoadingRateSed = z.SumSed / z.AreaTotal
+        z.LoadingRateN = z.SumNitr / z.AreaTotal
+        z.LoadingRateP = z.SumPhos / z.AreaTotal
     else:
-        LoadingRateSed = 0
-        LoadingRateN = 0
-        LoadingRateP = 0
+        z.LoadingRateSed = 0
+        z.LoadingRateN = 0
+        z.LoadingRateP = 0
 
     # mg/l
-    if MeanFlow > 0:
-        ConcSed = (SumSed * KG_TO_MG) / (MeanFlow * M3_TO_L)
-        ConcN = (SumNitr * KG_TO_MG) / (MeanFlow * M3_TO_L)
-        ConcP = (SumPhos * KG_TO_MG) / (MeanFlow * M3_TO_L)
+    if z.MeanFlow > 0:
+        z.ConcSed = (z.SumSed * KG_TO_MG) / (z.MeanFlow * M3_TO_L)
+        z.ConcN = (z.SumNitr * KG_TO_MG) / (z.MeanFlow * M3_TO_L)
+        z.ConcP = (z.SumPhos * KG_TO_MG) / (z.MeanFlow * M3_TO_L)
     else:
-        ConcSed = 0
-        ConcN = 0
-        ConcP = 0
+        z.ConcSed = 0
+        z.ConcN = 0
+        z.ConcP = 0
 
     # mg/l
-    if MeanLowFlow > 0:
-        LFConcSed = ((z.AvSedYield[LowFlowMonth] * TONNE_TO_KG * KG_TO_MG) /
-                     (MeanLowFlow * M3_TO_L))
-        LFConcN = ((z.AvTotNitr[LowFlowMonth] * KG_TO_MG) /
-                   (MeanLowFlow * M3_TO_L))
-        LFConcP = ((z.AvTotPhos[LowFlowMonth] * KG_TO_MG) /
-                   (MeanLowFlow * M3_TO_L))
+    if z.MeanLowFlow > 0:
+        z.LFConcSed = ((z.AvSedYield[z.LowFlowMonth] * TONNE_TO_KG * KG_TO_MG) / (z.MeanLowFlow * M3_TO_L))
+        z.LFConcN = ((z.AvTotNitr[z.LowFlowMonth] * KG_TO_MG) / (z.MeanLowFlow * M3_TO_L))
+        z.LFConcP = ((z.AvTotPhos[z.LowFlowMonth] * KG_TO_MG) / (z.MeanLowFlow * M3_TO_L))
     else:
-        LFConcSed = 0
-        LFConcN = 0
-        LFConcP = 0
+        z.LFConcSed = 0
+        z.LFConcN = 0
+        z.LFConcP = 0
 
     output = {}
 
@@ -794,9 +786,9 @@ def WriteOutput(z):
         'WxYrEnd': z.WxYrEnd,
     }
 
-    output['AreaTotal'] = AreaTotal
-    output['MeanFlow'] = MeanFlow
-    output['MeanFlowPerSecond'] = MeanFlowPS
+    output['AreaTotal'] = z.AreaTotal
+    output['MeanFlow'] = z.MeanFlow
+    output['MeanFlowPerSecond'] = z.MeanFlowPS
 
     # Equivalent to lines 965 - 988 of source
     output['monthly'] = []
@@ -897,8 +889,8 @@ def WriteOutput(z):
     output['Loads'].append({
         'Source': 'Point Sources',
         'Sediment': 0,
-        'TotalN': YrPointNitr * z.RetentFactorN * (1 - z.AttenN),
-        'TotalP': YrPointPhos * z.RetentFactorP * (1 - z.AttenP),
+        'TotalN': z.YrPointNitr * z.RetentFactorN * (1 - z.AttenN),
+        'TotalP': z.YrPointPhos * z.RetentFactorP * (1 - z.AttenP),
     })
     output['Loads'].append({
         'Source': 'Septic Systems',
@@ -911,30 +903,30 @@ def WriteOutput(z):
     output['SummaryLoads'].append({
         'Source': 'Total Loads',
         'Unit': 'kg',
-        'Sediment': SumSed,
-        'TotalN': SumNitr,
-        'TotalP': SumPhos,
+        'Sediment': z.SumSed,
+        'TotalN': z.SumNitr,
+        'TotalP': z.SumPhos,
     })
     output['SummaryLoads'].append({
         'Source': 'Loading Rates',
         'Unit': 'kg/ha',
-        'Sediment': LoadingRateSed,
-        'TotalN': LoadingRateN,
-        'TotalP': LoadingRateP,
+        'Sediment': z.LoadingRateSed,
+        'TotalN': z.LoadingRateN,
+        'TotalP': z.LoadingRateP,
     })
     output['SummaryLoads'].append({
         'Source': 'Mean Annual Concentration',
         'Unit': 'mg/l',
-        'Sediment': ConcSed,
-        'TotalN': ConcN,
-        'TotalP': ConcP,
+        'Sediment': z.ConcSed,
+        'TotalN': z.ConcN,
+        'TotalP': z.ConcP,
     })
     output['SummaryLoads'].append({
         'Source': 'Mean Low-Flow Concentration',
         'Unit': 'mg/l',
-        'Sediment': LFConcSed,
-        'TotalN': LFConcN,
-        'TotalP': LFConcP,
+        'Sediment': z.LFConcSed,
+        'TotalN': z.LFConcN,
+        'TotalP': z.LFConcP,
     })
 
     return output

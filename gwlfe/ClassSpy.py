@@ -1,5 +1,11 @@
 import inspect
 import pandas as pd
+import csv
+from graphviz import Digraph
+import numpy as np
+import matplotlib.pyplot as plt
+import networkx as nx
+
 
 class ClassSpy(object):
     def __init__(self):
@@ -8,29 +14,249 @@ class ClassSpy(object):
 
     def __setattr__(self, key, value):
         caller = inspect.currentframe().f_back
-        self.sets.append([key, caller.f_code.co_filename.split("\\")[-1] ,caller.f_lineno])
-        self.__dict__[key] = value
+        if (type(value) == np.ndarray):
+            self.sets.append([key, type(value).__name__ + str(value.shape), caller.f_code.co_filename.split("\\")[-1],
+                              caller.f_lineno])
+            self.__dict__[key] = ArraySpy(value, key, self.__dict__["gets"], self.__dict__["sets"])
+        elif (type(value) != int and type(value) != np.float64 and type(value) != float):
+            print(type(value))  # just in case this type would need a custom method like numpy arrays
+            self.sets.append([key, type(value).__name__, caller.f_code.co_filename.split("\\")[-1], caller.f_lineno])
+            self.__dict__[key] = value
+        else:
+            self.sets.append([key, type(value).__name__, caller.f_code.co_filename.split("\\")[-1], caller.f_lineno])
+            self.__dict__[key] = value
 
-    # def __getattribute__(self, item):
-    #     if(item != "__dict__" and item != "sets"):
-    #         caller = inspect.currentframe().f_back
-    #         object.__getattribute__(self, "gets").append([item, caller.f_code.co_filename.split("\\")[-1] ,str(caller.f_lineno))])
-    #         return object.__getattribute__(self, item)
-    #     else:
-    #         return object.__getattribute__(self, item)
+    def __getattribute__(self, item):
+        if (item != "__dict__" and item != "sets" and item != "gets"):
+            caller = inspect.currentframe().f_back
+            object.__getattribute__(self, "gets").append(
+                [item, caller.f_code.co_filename.split("\\")[-1], str(caller.f_lineno)])
+            return object.__getattribute__(self, item)
+        else:
+            return object.__getattribute__(self, item)
 
-    def variable_file_usages(self):
-        sets = pd.DataFrame.from_records(self.sets,columns=("Variable","File","Line Number"))
-        grouped_sets = sets.groupby(by="File")
-        for key, item in grouped_sets:
-            print(key)
-            print(item)
+    def __del__(self):
+        print("sets: " + str(len(self.sets)))
+        print("gets: " + str(len(self.gets)))
+        with open("sets.csv", "wb") as f:
+            writer = csv.writer(f)
+            writer.writerows([["Variable", "Type", "File", "LineNo"]])
+            writer.writerows(self.sets)
+        with open("gets.csv", "wb") as f:
+            writer = csv.writer(f)
+            writer.writerows([["Variable", "File", "LineNo"]])
+            writer.writerows(self.gets)
 
-    def unique_variable_file_usages(self):
-        sets = pd.DataFrame.from_records(self.sets, columns=("Variable", "File", "Line Number")).drop_duplicates()
-        grouped_sets = sets.groupby(by=["File"])
-        for key, item in grouped_sets:
-            not_file = sets.loc[~sets["File"]==key]
 
-            print(key)
-            print(item)
+class ArraySpy(np.ndarray):
+    def __new__(cls, input_array, name, gets_in, sets_in):
+        obj = np.asarray(input_array).view(cls)
+        obj.name = name
+        obj.gets = gets_in
+        obj.sets = sets_in
+        return obj
+
+    def __array_finalize__(self, obj):
+        # see InfoArray.__array_finalize__ for comments
+        if obj is None: return
+        self.info = getattr(obj, 'info', None)
+
+    def __getitem__(self, item):
+        # print(self.name + "[" + str(item) + "]")
+        attr = np.ndarray.__getitem__(self, item)
+        if issubclass(type(attr), np.ndarray):  # handle multi dimensional arrays
+            return ArraySpy(attr, self.name, self.gets, self.sets)
+        else:
+            caller = inspect.currentframe().f_back
+            object.__getattribute__(self, "gets").append(
+                [self.name, caller.f_code.co_filename.split("\\")[-1], str(caller.f_lineno)])
+            return attr
+
+    def __setitem__(self, key, value):
+        # print(self.name,value)
+        caller = inspect.currentframe().f_back
+        self.sets.append(
+            [self.name, type(value).__name__, caller.f_code.co_filename.split("\\")[-1], caller.f_lineno])
+        np.ndarray.__setitem__(self, key, value)
+
+
+def variable_file_usages(self):
+    sets = pd.DataFrame.from_records(self.sets, columns=("Variable", "File", "Line Number"))
+    grouped_sets = sets.groupby(by="File")
+    for key, item in grouped_sets:
+        print(key)
+        print(item)
+def temp(value):
+    print(value)
+    if(len(value)>1):
+        # value.iloc[0,"Shape"] = "doubleoctagon"
+        print("hi")
+        temp = value.iloc[0]
+        temp.iloc[0,"Shape"] = "doubleoctagon"
+        return "doubleoctagon"
+    else:
+        return value
+
+def sets_to_csvs(sets, gets):
+    sets = sets.drop_duplicates()
+    gets = gets.drop_duplicates()
+
+    variables = pd.concat([sets[["Variable", "File", "LineNo"]], gets]).drop_duplicates(subset=("Variable",))
+
+    # edge connection csv
+    variable_edges = pd.merge(sets, gets, how='outer', on=("LineNo", "File"), suffixes=('_set', '_get'))
+    try:
+        old_edges = pd.read_csv("connections.csv")
+        variable_edges = pd.concat([variable_edges, old_edges]).drop_duplicates().reset_index(drop=True)
+    except:
+        print("no previous connections.csv")
+    variable_edges.to_csv("connections.csv", index=False)
+
+    # variables csv
+    # add colors
+    variable_colors = {
+        "ndarray": "#FFFFFF",
+        "ndarray(0L, 17L)": "#1E9C7D",
+        "ndarray(0L,)": "#D75F05",
+        "ndarray(12L, 31L)": "#7073B6",
+        "ndarray(12L, 3L)": "#E72B99",
+        "ndarray(12L,)": "#FCC732",
+        "ndarray(15L, 12L)": "#FFEBA1",
+        "ndarray(15L, 12L, 31L)": "#C5E9AC",
+        "ndarray(15L, 12L, 3L)": "#6AA524",
+        "ndarray(15L, 16L)": "#E9A800",
+        "ndarray(15L, 16L, 3L)": "#D2BCD1",
+        "ndarray(15L,)": "#9BD2F2",
+        "ndarray(16L, 12L)": "#ED8E1E",
+        "ndarray(16L, 15L, 12L, 31L)": "#B77013",
+        "ndarray(16L, 3L)": "#B490B5",
+        "ndarray(16L,)": "#FEDBA8",
+        "ndarray(2L,)": "#61C5A4",
+        "ndarray(31L,)": "#BFAED8",
+        "ndarray(3L, 16L)": "#FBC586",
+        "ndarray(3L,)": "#823F89",
+        "ndarray(50L, 12L, 31L)": "#FFFC9B",
+        "ndarray(5L,)": "#3F70AC",
+        "ndarray(6L,)": "#C05919",
+        "ndarray(9L,)": "#FFFE21",
+    }
+    variables_with_type_array = sets[sets["Type"].str.match("ndarray")]
+    variables_with_type_array["Color"] = variables_with_type_array["Type"].map(variable_colors)
+
+    variables = pd.merge(variables, variables_with_type_array[["Variable", "Color"]], how='outer', on=("Variable"))
+
+    # change shape of inputs
+    variables_read_from_parser = variable_edges.query(
+        'File == "parser.py" & Variable_get != Variable_get & (Type == "float" | Type == "int" | Type == "str" | Type == "unicode")')  # a != a will return false for NaN
+    variables_read_from_parser["Shape"] = "parallelogram"
+    variables_read_from_parser.rename(columns={"Variable_set": "Variable"}, inplace=True)
+    variables_read_from_parser.drop(columns=["File", "LineNo", "Variable_get"],inplace=True)
+    # print(variables_read_from_parser[variables_read_from_parser["Variable"] == "AvSeptPhos"])
+    # inputs = pd.merge(variables, variables_read_from_parser[["Variable", "Shape"]], how='outer')
+
+    # change shape of outputs
+    variables_written_to_output = variable_edges.query(
+        'File == "WriteOutputFiles.py" & Variable_set != Variable_set & LineNo > 776')  # a != a will return false for NaN
+    variables_written_to_output["Shape"] = "septagon"
+    variables_written_to_output.rename(columns={"Variable_get": "Variable"}, inplace=True)
+    variables_written_to_output.drop(columns=["File","LineNo","Variable_set"],inplace=True)
+    # outputs = pd.merge(variables, variables_written_to_output[["Variable", "Shape"]], how='outer')
+
+    # inputs.update(outputs)
+
+    variables_with_shapes = pd.concat([variables_read_from_parser, variables_written_to_output])
+    print(variables_with_shapes)
+    variables_with_shapes = variables_with_shapes.groupby('Variable').agg({
+        'Shape': 'last',#TODO: this should change the shape of Variables that are both an input and output
+    }).reset_index()
+
+    print(variables_with_shapes[variables_with_shapes["Variable"] == "AvSeptPhos"])
+
+    variables = pd.merge(variables,variables_with_shapes,how='outer')
+
+    values = {'Color': "#000000", 'Shape': "box"}
+    variables = variables.fillna(value=values)  # fill with defaults
+
+    try:
+        old_variables = pd.read_csv("variables.csv")
+        variables = pd.concat([variables[["Variable", "Color", "Shape"]], old_variables]).drop_duplicates(
+            keep='first').reset_index(
+            drop=True)
+    except IOError:
+        print("no previous variables.csv")
+
+    variables[["Variable", "Color", "Shape"]].to_csv("variables.csv",
+                                                     index=False)  # only write out Variable/Color/Shape
+
+
+def variables_connected_to_output(output_variable):
+    graph = nx.DiGraph()
+    variable_edges = pd.read_csv("connections.csv")
+    complete_edges = variable_edges[variable_edges['Variable_set'].notnull() & variable_edges['Variable_get'].notnull()]
+    for index, row in complete_edges.iterrows():
+        print(row[4], row[0])
+        graph.add_edge(row[4], row[0])
+
+    reversed = nx.reverse(graph)
+
+    variable_decendents = list(nx.descendants(reversed, output_variable))
+    variable_decendents.append(output_variable)
+    variable_graph(variable_decendents)
+
+
+def variable_graph(variable_subset=None):
+    dot = Digraph(comment='The Round Table', strict=True, engine="dot")
+    # splines="true"
+    # overlap_scaling = '10'
+    dot.attr(overlap="scale", rankdir='LR', size='180,180')
+    # dot.format = 'svg'
+    variable_edges = pd.read_csv("connections.csv")
+    variables = pd.read_csv("variables.csv")
+
+    complete_edges = variable_edges[variable_edges['Variable_set'].notnull() & variable_edges['Variable_get'].notnull()]
+    for index, row in complete_edges.iterrows():
+        # with dot.subgraph(name=key, node_attr={'shape': 'box'},body="test") as c:
+        if (type(variable_subset) == list):
+            if (row[0] in variable_subset and row[4] in variable_subset):
+                return
+
+        if (row[4] != "NYrs" and row[4] != "Area" and row[4] != "DimYrs" and row[4] != "WxYrs"):
+            try:
+                variable_entry = variables[variables["Variable"] == row[0]].iloc[0]
+                if (variable_entry["Color"] == "#000000"):
+                    dot.attr('node', color=variable_entry["Color"], style='solid')
+                else:
+                    dot.attr('node', color=variable_entry["Color"], style='filled')
+                dot.attr('node', shape=variable_entry["Shape"])
+                dot.node(row[0])
+            except IndexError:
+                dot.attr('node', color="#000000", style='solid')
+                dot.attr('node', shape='box')
+            try:
+                variable_entry = variables[variables["Variable"] == row[4]].iloc[0]
+                if (variable_entry["Color"] == "#000000"):
+                    dot.attr('node', color=variable_entry["Color"], style='solid')
+                else:
+                    dot.attr('node', color=variable_entry["Color"], style='filled')
+                dot.attr('node', shape=variable_entry["Shape"])
+                dot.node(row[4])
+            except IndexError:
+                dot.attr('node', color="#000000", style='solid')
+                dot.attr('node', shape='box')
+
+            dot.edge(row[4], row[0])
+
+    dot.save('graph.dot')
+    dot.render('test', view=True)
+
+
+if __name__ == "__main__":
+    sets = pd.DataFrame.from_csv("../sets.csv", header=0, index_col=None)
+    gets = pd.DataFrame.from_csv("../gets.csv", header=0, index_col=None)
+    # sets_to_csvs(sets, gets)
+    variable_graph()
+    # variables_connected_to_output("Rain")
+    # a = 0
+    # b = 1
+    # if (a+b == 1):
+    #     print("test")
