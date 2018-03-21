@@ -86,16 +86,7 @@ def variable_file_usages(self):
     for key, item in grouped_sets:
         print(key)
         print(item)
-def temp(value):
-    print(value)
-    if(len(value)>1):
-        # value.iloc[0,"Shape"] = "doubleoctagon"
-        print("hi")
-        temp = value.iloc[0]
-        temp.iloc[0,"Shape"] = "doubleoctagon"
-        return "doubleoctagon"
-    else:
-        return value
+
 
 def sets_to_csvs(sets, gets):
     sets = sets.drop_duplicates()
@@ -150,7 +141,7 @@ def sets_to_csvs(sets, gets):
         'File == "parser.py" & Variable_get != Variable_get & (Type == "float" | Type == "int" | Type == "str" | Type == "unicode")')  # a != a will return false for NaN
     variables_read_from_parser["Shape"] = "parallelogram"
     variables_read_from_parser.rename(columns={"Variable_set": "Variable"}, inplace=True)
-    variables_read_from_parser.drop(columns=["File", "LineNo", "Variable_get"],inplace=True)
+    variables_read_from_parser.drop(columns=["File", "LineNo", "Variable_get"], inplace=True)
     # print(variables_read_from_parser[variables_read_from_parser["Variable"] == "AvSeptPhos"])
     # inputs = pd.merge(variables, variables_read_from_parser[["Variable", "Shape"]], how='outer')
 
@@ -159,20 +150,17 @@ def sets_to_csvs(sets, gets):
         'File == "WriteOutputFiles.py" & Variable_set != Variable_set & LineNo > 776')  # a != a will return false for NaN
     variables_written_to_output["Shape"] = "septagon"
     variables_written_to_output.rename(columns={"Variable_get": "Variable"}, inplace=True)
-    variables_written_to_output.drop(columns=["File","LineNo","Variable_set"],inplace=True)
+    variables_written_to_output.drop(columns=["File", "LineNo", "Variable_set"], inplace=True)
     # outputs = pd.merge(variables, variables_written_to_output[["Variable", "Shape"]], how='outer')
 
     # inputs.update(outputs)
 
     variables_with_shapes = pd.concat([variables_read_from_parser, variables_written_to_output])
-    print(variables_with_shapes)
     variables_with_shapes = variables_with_shapes.groupby('Variable').agg({
-        'Shape': 'last',#TODO: this should change the shape of Variables that are both an input and output
+        'Shape': 'last',  # TODO: this should change the shape of Variables that are both an input and output
     }).reset_index()
 
-    print(variables_with_shapes[variables_with_shapes["Variable"] == "AvSeptPhos"])
-
-    variables = pd.merge(variables,variables_with_shapes,how='outer')
+    variables = pd.merge(variables, variables_with_shapes, how='outer')
 
     values = {'Color': "#000000", 'Shape': "box"}
     variables = variables.fillna(value=values)  # fill with defaults
@@ -189,12 +177,11 @@ def sets_to_csvs(sets, gets):
                                                      index=False)  # only write out Variable/Color/Shape
 
 
-def variables_connected_to_output(output_variable):
+def variable_connected_to_output(output_variable):
     graph = nx.DiGraph()
     variable_edges = pd.read_csv("connections.csv")
     complete_edges = variable_edges[variable_edges['Variable_set'].notnull() & variable_edges['Variable_get'].notnull()]
     for index, row in complete_edges.iterrows():
-        print(row[4], row[0])
         graph.add_edge(row[4], row[0])
 
     reversed = nx.reverse(graph)
@@ -202,6 +189,26 @@ def variables_connected_to_output(output_variable):
     variable_decendents = list(nx.descendants(reversed, output_variable))
     variable_decendents.append(output_variable)
     variable_graph(variable_decendents)
+
+
+def variables_connected_to_output():
+    graph = nx.DiGraph()
+    variable_edges = pd.read_csv("connections.csv")
+    complete_edges = variable_edges[variable_edges['Variable_set'].notnull() & variable_edges['Variable_get'].notnull()]
+    for index, row in complete_edges.iterrows():
+        graph.add_edge(row[4], row[0])
+
+    reversed = nx.reverse(graph)
+
+    # get all the outputs
+    variables = pd.read_csv("variables.csv")
+    variables_connected = set()
+    for index, row in variables[variables["Shape"] == "septagon"].iterrows():
+        for descendant in list(nx.descendants(reversed, row[0])):
+            variables_connected.add(descendant)
+
+    print("Variables used in output: " + str(len(variables_connected)) + " (out of " + str(len(variables)) + ")")
+    variable_graph(list(variables_connected))
 
 
 def variable_graph(variable_subset=None):
@@ -216,10 +223,9 @@ def variable_graph(variable_subset=None):
     complete_edges = variable_edges[variable_edges['Variable_set'].notnull() & variable_edges['Variable_get'].notnull()]
     for index, row in complete_edges.iterrows():
         # with dot.subgraph(name=key, node_attr={'shape': 'box'},body="test") as c:
-        if (type(variable_subset) == list):
-            if (row[0] in variable_subset and row[4] in variable_subset):
-                return
-
+        if (type(variable_subset) == list):  # add the edge if it is in the subset, or if we weren't passed a subset
+            if (row[0] not in variable_subset or row[4] not in variable_subset):
+                continue
         if (row[4] != "NYrs" and row[4] != "Area" and row[4] != "DimYrs" and row[4] != "WxYrs"):
             try:
                 variable_entry = variables[variables["Variable"] == row[0]].iloc[0]
@@ -251,12 +257,9 @@ def variable_graph(variable_subset=None):
 
 
 if __name__ == "__main__":
-    sets = pd.DataFrame.from_csv("../sets.csv", header=0, index_col=None)
-    gets = pd.DataFrame.from_csv("../gets.csv", header=0, index_col=None)
+    # sets = pd.DataFrame.from_csv("../sets.csv", header=0, index_col=None)
+    # gets = pd.DataFrame.from_csv("../gets.csv", header=0, index_col=None)
     # sets_to_csvs(sets, gets)
-    variable_graph()
-    # variables_connected_to_output("Rain")
-    # a = 0
-    # b = 1
-    # if (a+b == 1):
-    #     print("test")
+    # variable_graph()
+    # variable_connected_to_output("Rain")
+    variables_connected_to_output()
