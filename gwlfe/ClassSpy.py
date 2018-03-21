@@ -107,28 +107,28 @@ def sets_to_csvs(sets, gets):
     # add colors
     variable_colors = {
         "ndarray": "#FFFFFF",
-        "ndarray(0L, 17L)": "#1E9C7D",
+        "ndarray(0L, 17L)": "#7073B6",
         "ndarray(0L,)": "#D75F05",
-        "ndarray(12L, 31L)": "#7073B6",
-        "ndarray(12L, 3L)": "#E72B99",
-        "ndarray(12L,)": "#FCC732",
-        "ndarray(15L, 12L)": "#FFEBA1",
-        "ndarray(15L, 12L, 31L)": "#C5E9AC",
-        "ndarray(15L, 12L, 3L)": "#6AA524",
-        "ndarray(15L, 16L)": "#E9A800",
-        "ndarray(15L, 16L, 3L)": "#D2BCD1",
-        "ndarray(15L,)": "#9BD2F2",
-        "ndarray(16L, 12L)": "#ED8E1E",
-        "ndarray(16L, 15L, 12L, 31L)": "#B77013",
-        "ndarray(16L, 3L)": "#B490B5",
-        "ndarray(16L,)": "#FEDBA8",
+        "ndarray(12L, 31L)": "#B8EA7B",
+        "ndarray(12L, 3L)": "#694176",
+        "ndarray(12L,)": "#A3D467",
+        "ndarray(15L, 12L)": "#D0F89F",
+        "ndarray(15L, 12L, 31L)": "#e3ffc1",
+        "ndarray(15L, 12L, 3L)": "#E1CDE6",
+        "ndarray(15L, 16L)": "#ED8E1E",
+        "ndarray(15L, 16L, 3L)": "#C29CCD",
+        "ndarray(15L,)": "#78A24C",
+        "ndarray(16L, 12L)": "#E9A800",
+        "ndarray(16L, 15L, 12L, 31L)": "#FEDBA8",
+        "ndarray(16L, 3L)": "#B087BF",
+        "ndarray(16L,)": "#B77013",
         "ndarray(2L,)": "#61C5A4",
-        "ndarray(31L,)": "#BFAED8",
-        "ndarray(3L, 16L)": "#FBC586",
+        "ndarray(31L,)": "#88B153",
+        "ndarray(3L, 16L)": "#B087BF",
         "ndarray(3L,)": "#823F89",
-        "ndarray(50L, 12L, 31L)": "#FFFC9B",
+        "ndarray(50L, 12L, 31L)": "#ff9e54",
         "ndarray(5L,)": "#3F70AC",
-        "ndarray(6L,)": "#C05919",
+        "ndarray(6L,)": "#E72B99",
         "ndarray(9L,)": "#FFFE21",
     }
     variables_with_type_array = sets[sets["Type"].str.match("ndarray")]
@@ -257,9 +257,9 @@ def variable_graph(variable_subset=None):
 
 
 if __name__ == "__main__":
-    # sets = pd.DataFrame.from_csv("../sets.csv", header=0, index_col=None)
-    # gets = pd.DataFrame.from_csv("../gets.csv", header=0, index_col=None)
-    # sets_to_csvs(sets, gets)
+    sets = pd.DataFrame.from_csv("../sets.csv", header=0, index_col=None)
+    gets = pd.DataFrame.from_csv("../gets.csv", header=0, index_col=None)
+    sets_to_csvs(sets, gets)
     # variable_graph()
-    # variable_connected_to_output("Rain")
-    variables_connected_to_output()
+    variable_connected_to_output("AvAnimalNSum")
+    # variables_connected_to_output()
