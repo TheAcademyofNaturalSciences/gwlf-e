@@ -183,7 +183,6 @@ def variable_connected_to_output(output_variable):
     complete_edges = variable_edges[variable_edges['Variable_set'].notnull() & variable_edges['Variable_get'].notnull()]
     for index, row in complete_edges.iterrows():
         graph.add_edge(row[4], row[0])
-
     reversed = nx.reverse(graph)
 
     variable_decendents = list(nx.descendants(reversed, output_variable))
@@ -218,7 +217,12 @@ def variable_graph(variable_subset=None):
     dot.attr(overlap="scale", rankdir='LR', size='180,180')
     # dot.format = 'svg'
     variable_edges = pd.read_csv("connections.csv")
-    variables = pd.read_csv("variables.csv")
+
+    variables = pd.read_csv("variables.csv", usecols=("Variable", "Color", "Shape"))
+
+    if(variables.isnull().values.any()):
+        print(variables[variables.isnull().values])
+        raise AssertionError("not all boxes are complete")
 
     complete_edges = variable_edges[variable_edges['Variable_set'].notnull() & variable_edges['Variable_get'].notnull()]
     for index, row in complete_edges.iterrows():
@@ -257,9 +261,9 @@ def variable_graph(variable_subset=None):
 
 
 if __name__ == "__main__":
-    sets = pd.DataFrame.from_csv("../sets.csv", header=0, index_col=None)
-    gets = pd.DataFrame.from_csv("../gets.csv", header=0, index_col=None)
-    sets_to_csvs(sets, gets)
+    # sets = pd.DataFrame.from_csv("../sets.csv", header=0, index_col=None)
+    # gets = pd.DataFrame.from_csv("../gets.csv", header=0, index_col=None)
+    # sets_to_csvs(sets, gets)
     # variable_graph()
-    variable_connected_to_output("AvAnimalNSum")
-    # variables_connected_to_output()
+    # variable_connected_to_output("MeanFlow")
+    variables_connected_to_output()
