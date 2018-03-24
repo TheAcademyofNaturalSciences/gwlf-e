@@ -190,6 +190,42 @@ def variable_connected_to_output(output_variable):
     variable_graph(variable_decendents)
 
 
+def intersection(lst1, lst2):
+    lst3 = [value for value in lst1 if value in lst2]
+    return lst3
+
+
+def output_intersection():
+    graph = nx.DiGraph()
+    variables = pd.read_csv("variables.csv")
+    variable_edges = pd.read_csv("connections.csv")
+    complete_edges = variable_edges[variable_edges['Variable_set'].notnull() & variable_edges['Variable_get'].notnull()]
+    for index, row in complete_edges.iterrows():
+        graph.add_edge(row[4], row[0])
+    reversed = nx.reverse(graph)
+
+    outputs = variables[variables["Shape"] == "septagon"]
+    inputs = variables[variables["Shape"] == "parallelogram"]
+    inputs = list(inputs["Variable"])  # strip out the extra information
+    intersections = []
+    for index, output_1 in outputs.iterrows():
+        row = []
+        for index, output_2 in outputs.iterrows():
+            # print(output_1[0],output_2[0])
+            all_intersections = intersection(nx.descendants(reversed, output_1[0]),
+                                             nx.descendants(reversed, output_2[0]))
+            row.append([value for value in all_intersections if value not in inputs])
+        intersections.append([output_1[0]] + row)
+
+    with open('intersections.csv', 'wb') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(list(outputs["Variable"]))
+        for row in intersections:
+            writer.writerow(row)
+    # variable_decendents.append(output_variable)
+    # variable_graph(variable_decendents)
+
+
 def variables_connected_to_output():
     graph = nx.DiGraph()
     variable_edges = pd.read_csv("connections.csv")
@@ -220,7 +256,7 @@ def variable_graph(variable_subset=None):
 
     variables = pd.read_csv("variables.csv", usecols=("Variable", "Color", "Shape"))
 
-    if(variables.isnull().values.any()):
+    if (variables.isnull().values.any()):
         print(variables[variables.isnull().values])
         raise AssertionError("not all boxes are complete")
 
@@ -266,4 +302,5 @@ if __name__ == "__main__":
     # sets_to_csvs(sets, gets)
     # variable_graph()
     # variable_connected_to_output("MeanFlow")
-    variables_connected_to_output()
+    # variables_connected_to_output()
+    output_intersection()
