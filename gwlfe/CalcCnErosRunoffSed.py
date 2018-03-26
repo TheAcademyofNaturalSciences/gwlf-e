@@ -30,11 +30,11 @@ def CalcCN(z, i, Y, j):
     # Calculate Curve Number (CN)
     for l in range(z.NRur):
         z.Qrun = 0
-        grow_factor = GrowFlag.intval(z.Grow[i])
+        #grow_factor = GrowFlag.intval(z.Grow[i])
 
         if z.CN[l] > 0:
             if z.Melt <= 0:
-                if grow_factor > 0:
+                if z.Grow_Factor[i] > 0:
                     # growing season
                     if z.AMC5 >= 5.33:
                         z.CNum = z.NewCN[2][l]
@@ -103,12 +103,12 @@ def CalcCN(z, i, Y, j):
         return
     #else:
     for l in range(z.NRur, z.NLU):
-        grow_factor = GrowFlag.intval(z.Grow[i])
+        #grow_factor = GrowFlag.intval(z.Grow[i])
 
         # Find curve number
         if z.CNI[1][l] > 0:
             if z.Melt <= 0:
-                if grow_factor > 0:
+                if z.Grow_Factor[i] > 0:
                     # Growing season
                     if z.AMC5 >= 5.33:
                         z.CNumImperv = z.CNI[2][l]
@@ -136,7 +136,7 @@ def CalcCN(z, i, Y, j):
 
         if z.CNP[1][l] > 0:
             if z.Melt <= 0:
-                if grow_factor > 0:
+                if z.Grow_Factor[i] > 0:
                     # Growing season
                     if z.AMC5 >= 5.33:
                         z.CNumPerv = z.CNP[2][l]

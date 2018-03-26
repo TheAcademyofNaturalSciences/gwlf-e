@@ -26,7 +26,7 @@ from . import WriteOutputFiles
 import Precipitation
 import ET
 import PtSrcFlow
-
+import Grow_Factor
 log = logging.getLogger(__name__)
 
 
@@ -58,6 +58,8 @@ def run(z):
 
     # z.PtSrcFlow = PtSrcFlow.PtSrcFlow(z.NYrs,z.PointFlow)
     z.PtSrcFlow = PtSrcFlow.PtSrcFlow_2(z.NYrs,z.PointFlow)
+
+    z.Grow_Factor = Grow_Factor.Grow_Factor(z.NYrs, z.DaysMonth, z.Grow)
 
     for Y in range(z.NYrs):
         # Initialize monthly septic system variables
@@ -227,13 +229,13 @@ def run(z):
                 z.StreamFlow[Y][i] = z.StreamFlow[Y][i] + z.Flow
                 z.GroundWatLE[Y][i] = z.GroundWatLE[Y][i] + z.GrFlow
 
-                grow_factor = GrowFlag.intval(z.Grow[i])
+                #grow_factor = GrowFlag.intval(z.Grow[i])
 
                 # CALCULATE DAILY NUTRIENT LOAD FROM PONDING SYSTEMS
                 z.PondNitrLoad = (z.NumPondSys[i] *
-                                  (z.NitrSepticLoad - z.NitrPlantUptake * grow_factor))
+                                  (z.NitrSepticLoad - z.NitrPlantUptake * z.Grow_Factor[i]))
                 z.PondPhosLoad = (z.NumPondSys[i] *
-                                  (z.PhosSepticLoad - z.PhosPlantUptake * grow_factor))
+                                  (z.PhosSepticLoad - z.PhosPlantUptake * z.Grow_Factor[i]))
 
                 # UPDATE MASS BALANCE ON PONDED EFFLUENT
                 if z.Temp[Y][i][j] <= 0 or z.InitSnow > 0:
@@ -255,18 +257,18 @@ def run(z):
                 z.MonthPondNitr[i] = z.MonthPondNitr[i] + z.NitrPondOverflow
                 z.MonthPondPhos[i] = z.MonthPondPhos[i] + z.PhosPondOverflow
 
-                grow_factor = GrowFlag.intval(z.Grow[i])
+                #grow_factor = GrowFlag.intval(z.Grow[i])
 
                 # Obtain the monthly Normal Nitrogen
                 z.MonthNormNitr[i] = (z.MonthNormNitr[i] + z.NitrSepticLoad -
-                                      z.NitrPlantUptake * grow_factor)
+                                      z.NitrPlantUptake * z.Grow_Factor[i])
 
                 # 0.56 IS ATTENUATION FACTOR FOR SOIL LOSS
                 # 0.66 IS ATTENUATION FACTOR FOR SUBSURFACE FLOW LOSS
                 z.MonthShortNitr[i] = (z.MonthShortNitr[i] + z.NitrSepticLoad -
-                                       z.NitrPlantUptake * grow_factor)
+                                       z.NitrPlantUptake * z.Grow_Factor[i])
                 z.MonthShortPhos[i] = (z.MonthShortPhos[i] + z.PhosSepticLoad -
-                                       z.PhosPlantUptake * grow_factor)
+                                       z.PhosPlantUptake * z.Grow_Factor[i])
                 z.MonthDischargeNitr[i] = z.MonthDischargeNitr[i] + z.NitrSepticLoad
                 z.MonthDischargePhos[i] = z.MonthDischargePhos[i] + z.PhosSepticLoad
 
