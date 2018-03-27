@@ -26,7 +26,17 @@ from . import WriteOutputFiles
 import Precipitation
 import ET
 import PtSrcFlow
+import InitSnow
 import Grow_Factor
+import PondPhosLoad
+import FrozenPondPhos
+import PhosPondOverflow
+import MonthPondPhos
+import MonthShortPhos
+import MonthDischargePhos
+import DisSeptPhos
+import SepticPhos
+import AvSeptPhos
 log = logging.getLogger(__name__)
 
 
@@ -61,15 +71,46 @@ def run(z):
 
     z.Grow_Factor = Grow_Factor.Grow_Factor(z.NYrs, z.DaysMonth, z.Grow)
 
+    #z.InitialSnow = z.InitSnow
+    z.InitSnow,z.MeltPest = InitSnow.InitSnow(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow)
+
+    z.PondPhosLoad = PondPhosLoad.PondPhosLoad(z.NYrs, z.DaysMonth, z.NumPondSys, z.PhosSepticLoad, z.PhosPlantUptake
+                                               , z.Grow)
+
+    z.FrozenPondPhos = FrozenPondPhos.FrozenPondPhos(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.NumPondSys
+                                                , z.PhosSepticLoad, z.PhosPlantUptake, z.Grow)
+
+    z.PhosPondOverflow = PhosPondOverflow.PhosPondOverflow(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow
+                                                , z.NumPondSys, z.PhosSepticLoad, z.PhosPlantUptake, z.Grow)
+
+    z.MonthPondPhos = MonthPondPhos.MonthPondPhos(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.NumPondSys
+                                                , z.PhosSepticLoad, z.PhosPlantUptake, z.Grow)
+
+    z.MonthShortPhos = MonthShortPhos.MonthShortPhos(z.NYrs, z.DaysMonth, z.PhosSepticLoad, z.PhosPlantUptake, z.Grow)
+
+    z.MonthDischargePhos = MonthDischargePhos.MonthDischargePhos(z.NYrs, z.DaysMonth, z.PhosSepticLoad)
+
+    z.DisSeptPhos = DisSeptPhos.DisSeptPhos(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.NumPondSys
+                                                , z.NumShortSys, z.NumDischargeSys, z.PhosSepticLoad, z.PhosPlantUptake
+                                                , z.Grow)
+
+    z.SepticPhos = SepticPhos.SepticPhos(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.NumPondSys
+                                                , z.NumShortSys, z.NumDischargeSys, z.PhosSepticLoad, z.PhosPlantUptake
+                                                , z.Grow)
+
+    z.AvSeptPhos = AvSeptPhos.AvSeptPhos(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.NumPondSys
+                                                , z.NumShortSys, z.NumDischargeSys, z.PhosSepticLoad
+                                                , z.PhosPlantUptake, z.Grow)
+
     for Y in range(z.NYrs):
         # Initialize monthly septic system variables
         z.MonthPondNitr = np.zeros(12)
-        z.MonthPondPhos = np.zeros(12)
+        #z.MonthPondPhos = np.zeros(12)
         z.MonthNormNitr = np.zeros(12)
         z.MonthShortNitr = np.zeros(12)
-        z.MonthShortPhos = np.zeros(12)
+        #z.MonthShortPhos = np.zeros(12)
         z.MonthDischargeNitr = np.zeros(12)
-        z.MonthDischargePhos = np.zeros(12)
+        #z.MonthDischargePhos = np.zeros(12)
 
         # FOR EACH MONTH...
         for i in range(12):
@@ -88,7 +129,7 @@ def run(z):
                 # ***** BEGIN WEATHER DATA ANALYSIS *****
                 z.DailyTemp = z.Temp[Y][i][j]
                 z.DailyPrec = z.Prec[Y][i][j]
-                z.Melt = 0
+                #z.Melt = 0
                 z.Rain = 0
                 z.Water = 0
                 z.Erosiv = 0
@@ -114,27 +155,30 @@ def run(z):
 
                 # RAIN , SNOWMELT, EVAPOTRANSPIRATION (ET)
                 if z.DailyTemp <= 0:
-                    z.InitSnow = z.InitSnow + z.DailyPrec
+                    #z.InitSnow = z.InitSnow + z.DailyPrec
+                    pass
                 else:
                     z.Rain = z.DailyPrec
-                    if z.InitSnow > 0.001:
-                        # A DEGREE-DAY INITSNOW MELT, BUT NO MORE THAN EXISTED
-                        # INITSNOW
-                        z.Melt = 0.45 * z.DailyTemp
-                        z.MeltPest[Y][i][j] = z.Melt
-                        if z.Melt > z.InitSnow:
-                            z.Melt = z.InitSnow
-                            z.MeltPest[Y][i][j] = z.InitSnow
-                        z.InitSnow = z.InitSnow - z.Melt
-                    else:
-                        z.MeltPest[Y][i][j] = 0
+                    # if z.InitSnow > 0.001:
+                    #     # A DEGREE-DAY INITSNOW MELT, BUT NO MORE THAN EXISTED
+                    #     # INITSNOW
+                    #     z.Melt = 0.45 * z.DailyTemp
+                    #     z.MeltPest[Y][i][j] = z.Melt
+                    #     if z.Melt > z.InitSnow[Y][i][j]:
+                    #         #z.Melt = z.InitSnow[Y][i][j]
+                    #         #z.MeltPest[Y][i][j] = z.InitSnow
+                    #         pass
+                    #     #z.InitSnow = z.InitSnow - z.Melt
+                    #     pass
+                    # else:
+                    #     z.MeltPest[Y][i][j] = 0
 
                     # AVAILABLE WATER CALCULATION
-                    z.Water = z.Rain + z.Melt
+                    z.Water = z.Rain + z.MeltPest[Y][i][j]
                     z.DailyWater[Y][i][j] = z.Water
 
                     # Compute erosivity when erosion occurs, i.e., with rain and no InitSnow left
-                    if z.Rain > 0 and z.InitSnow < 0.001:
+                    if z.Rain > 0 and z.InitSnow[Y][i][j] < 0.001:
                         z.Erosiv = 6.46 * z.Acoef[i] * z.Rain ** 1.81
 
                     # IF WATER AVAILABLE, THEN CALL SUB TO COMPUTE CN, RUNOFF,
@@ -234,28 +278,28 @@ def run(z):
                 # CALCULATE DAILY NUTRIENT LOAD FROM PONDING SYSTEMS
                 z.PondNitrLoad = (z.NumPondSys[i] *
                                   (z.NitrSepticLoad - z.NitrPlantUptake * z.Grow_Factor[i]))
-                z.PondPhosLoad = (z.NumPondSys[i] *
-                                  (z.PhosSepticLoad - z.PhosPlantUptake * z.Grow_Factor[i]))
+                #z.PondPhosLoad = (z.NumPondSys[i] *
+                                 #(z.PhosSepticLoad - z.PhosPlantUptake * z.Grow_Factor[i]))
 
                 # UPDATE MASS BALANCE ON PONDED EFFLUENT
-                if z.Temp[Y][i][j] <= 0 or z.InitSnow > 0:
+                if z.Temp[Y][i][j] <= 0 or z.InitSnow[Y][i][j] > 0:
 
                     # ALL INPUTS GO TO FROZEN STORAGE
                     z.FrozenPondNitr = z.FrozenPondNitr + z.PondNitrLoad
-                    z.FrozenPondPhos = z.FrozenPondPhos + z.PondPhosLoad
+                    #z.FrozenPondPhos = z.FrozenPondPhos + z.PondPhosLoad[Y][i][j]
 
                     # NO NUTIENT OVERFLOW
                     z.NitrPondOverflow = 0
-                    z.PhosPondOverflow = 0
+                    #z.PhosPondOverflow = 0
                 else:
                     z.NitrPondOverflow = z.FrozenPondNitr + z.PondNitrLoad
-                    z.PhosPondOverflow = z.FrozenPondPhos + z.PondPhosLoad
+                    #z.PhosPondOverflow = z.FrozenPondPhos[Y][i][j] + z.PondPhosLoad[Y][i][j]
                     z.FrozenPondNitr = 0
-                    z.FrozenPondPhos = 0
+                    #z.FrozenPondPhos = 0
 
                 # Obtain the monthly Pond nutrients
                 z.MonthPondNitr[i] = z.MonthPondNitr[i] + z.NitrPondOverflow
-                z.MonthPondPhos[i] = z.MonthPondPhos[i] + z.PhosPondOverflow
+                #z.MonthPondPhos[i] = z.MonthPondPhos[i] + z.PhosPondOverflow[Y][i][j]
 
                 #grow_factor = GrowFlag.intval(z.Grow[i])
 
@@ -267,10 +311,10 @@ def run(z):
                 # 0.66 IS ATTENUATION FACTOR FOR SUBSURFACE FLOW LOSS
                 z.MonthShortNitr[i] = (z.MonthShortNitr[i] + z.NitrSepticLoad -
                                        z.NitrPlantUptake * z.Grow_Factor[i])
-                z.MonthShortPhos[i] = (z.MonthShortPhos[i] + z.PhosSepticLoad -
-                                       z.PhosPlantUptake * z.Grow_Factor[i])
+                #z.MonthShortPhos[i] = (z.MonthShortPhos[i] + z.PhosSepticLoad -
+                                       #z.PhosPlantUptake * z.Grow_Factor[i])
                 z.MonthDischargeNitr[i] = z.MonthDischargeNitr[i] + z.NitrSepticLoad
-                z.MonthDischargePhos[i] = z.MonthDischargePhos[i] + z.PhosSepticLoad
+                #z.MonthDischargePhos[i] = z.MonthDischargePhos[i] + z.PhosSepticLoad
 
             # CALCULATE WITHDRAWAL AND POINT SOURCE FLOW VALUES
             z.Withdrawal[Y][i] = (z.Withdrawal[Y][i] + z.StreamWithdrawal[i] +

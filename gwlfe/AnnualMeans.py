@@ -21,7 +21,7 @@ log = logging.getLogger(__name__)
 def CalculateAnnualMeanLoads(z, Y):
     # UPDATE SEPTIC SYSTEM AVERAGES
     z.AvSeptNitr += z.SepticNitr[Y] / z.NYrs
-    z.AvSeptPhos += z.SepticPhos[Y] / z.NYrs
+    #z.AvSeptPhos += z.SepticPhos[Y] / z.NYrs
 
     # Add the Stream Bank Erosion to sediment yield
     for i in range(12):

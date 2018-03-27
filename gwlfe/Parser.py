@@ -225,9 +225,9 @@ class GmsReader(object):
         z.AnnDayHrs = 0
         z.AreaTotal = 0
         z.FrozenPondNitr = 0
-        z.FrozenPondPhos = 0
+        #z.FrozenPondPhos = 0
         z.AvSeptNitr = 0
-        z.AvSeptPhos = 0
+        #z.AvSeptPhos = 0
         z.AgAreaTotal = 0
         z.ForestAreaTotal = 0
 
@@ -258,7 +258,7 @@ class GmsReader(object):
         z.SeepCoef = self.next(float)  # Seepage Coefficient
         z.UnsatStor = self.next(float)  # Unsaturated Storage
         z.SatStor = self.next(float)  # Saturated Storage
-        z.InitSnow = self.next(int)  # Initial Snow Days
+        z.InitialSnow = self.next(int)  # Initial Snow Days # Changed from InitSnow to value shown
         z.SedDelivRatio = self.next(float)  # Sediment Delivery Ratio
         z.MaxWaterCap = self.next(float)  # Average Available Water Capacity
         z.StreamLength = self.next(float)  # Total Stream Length (meters)
@@ -334,7 +334,7 @@ class GmsReader(object):
         z.DayLuSed = np.zeros((16, z.DimYrs, 12, 31))
         z.DayRunoff = np.zeros((z.DimYrs, 12, 31))
         z.DayLuRunoff = np.zeros((16, z.DimYrs, 12, 31))
-        z.MeltPest = np.zeros((z.DimYrs, 12, 31))
+        #z.MeltPest = np.zeros((z.DimYrs, 12, 31))
         z.PrecPest = np.zeros((z.DimYrs, 12, 31))
         z.DailyGrFlow = np.zeros((z.DimYrs, 12, 31))
         z.DailyETCm = np.zeros((z.DimYrs, 12, 31))
@@ -400,7 +400,7 @@ class GmsReader(object):
         z.LuTotPhos = np.zeros((z.DimYrs, 16))
         z.SedTrans = np.zeros((z.DimYrs, 16))
         z.SepticNitr = np.zeros(z.DimYrs)
-        z.SepticPhos = np.zeros(z.DimYrs)
+        #z.SepticPhos = np.zeros(z.DimYrs)
 
         # ANIMAL FEEDING OPERATIONS VARIABLES
         z.DailyAnimalN = np.zeros((z.DimYrs, 12, 31))
@@ -1368,7 +1368,7 @@ class GmsWriter(object):
             z.SeepCoef,
             z.UnsatStor,
             z.SatStor,
-            z.InitSnow,
+            z.InitialSnow, # This was InitSnow and was changed to value seen here
             z.SedDelivRatio,
             z.MaxWaterCap,
             z.StreamLength,

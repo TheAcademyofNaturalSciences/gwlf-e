@@ -171,21 +171,21 @@ def CalculateLoads(z, Y):
                          + z.MonthShortNitr[i] * z.NumShortSys[i]
                          + z.MonthDischargeNitr[i] * z.NumDischargeSys[i])
 
-        z.DisSeptPhos = (z.MonthPondPhos[i]
-                         + z.MonthShortPhos[i] * z.NumShortSys[i]
-                         + z.MonthDischargePhos[i] * z.NumDischargeSys[i])
+        # z.DisSeptPhos = (z.MonthPondPhos[Y][i]
+        #                  + z.MonthShortPhos[Y][i] * z.NumShortSys[i]
+        #                  + z.MonthDischargePhos[Y][i] * z.NumDischargeSys[i])
 
         # 0.59 IS ATTENUATION FACTOR FOR SOIL LOSS
         # 0.66 IS ATTENUATION FACTOR FOR SUBSURFACE FLOW LOSS
         z.DisSeptNitr = z.DisSeptNitr / 1000 * 0.59 * 0.66
-        z.DisSeptPhos = z.DisSeptPhos / 1000
+        #z.DisSeptPhos = z.DisSeptPhos / 1000
 
         z.DisNitr[Y][i] += z.DisSeptNitr
-        z.DisPhos[Y][i] += z.DisSeptPhos
+        z.DisPhos[Y][i] += z.DisSeptPhos[Y][i]
         z.TotNitr[Y][i] += z.DisSeptNitr
-        z.TotPhos[Y][i] += z.DisSeptPhos
+        z.TotPhos[Y][i] += z.DisSeptPhos[Y][i]
         z.SepticN[Y][i] += z.DisSeptNitr
-        z.SepticP[Y][i] += z.DisSeptPhos
+        z.SepticP[Y][i] += z.DisSeptPhos[Y][i]
 
         # ANNUAL TOTALS
         DisNitrTotal += z.DisNitr[Y][i]
@@ -195,7 +195,7 @@ def CalculateLoads(z, Y):
 
         # UPDATE ANNUAL SEPTIC SYSTEM LOADS
         z.SepticNitr[Y] += z.DisSeptNitr
-        z.SepticPhos[Y] += z.DisSeptPhos
+        #z.SepticPhos[Y] += z.DisSeptPhos[Y][i]
 
         # Annual pathogen totals
         AnimalFCTotal += z.AnimalFC[Y][i]
