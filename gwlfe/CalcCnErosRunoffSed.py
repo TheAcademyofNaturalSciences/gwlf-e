@@ -36,20 +36,20 @@ def CalcCN(z, i, Y, j):
             if z.MeltPest[Y][i][j] <= 0:
                 if z.Grow_Factor[i] > 0:
                     # growing season
-                    if z.AMC5 >= 5.33:
+                    if z.AMC5[Y][i][j] >= 5.33:
                         z.CNum = z.NewCN[2][l]
-                    elif z.AMC5 < 3.56:
-                        z.CNum = z.NewCN[0][l] + (z.CN[l] - z.NewCN[0][l]) * z.AMC5 / 3.56
+                    elif z.AMC5[Y][i][j] < 3.56:
+                        z.CNum = z.NewCN[0][l] + (z.CN[l] - z.NewCN[0][l]) * z.AMC5[Y][i][j] / 3.56
                     else:
-                        z.CNum = z.CN[l] + (z.NewCN[2][l] - z.CN[l]) * (z.AMC5 - 3.56) / 1.77
+                        z.CNum = z.CN[l] + (z.NewCN[2][l] - z.CN[l]) * (z.AMC5[Y][i][j] - 3.56) / 1.77
                 else:
                     # dormant season
-                    if z.AMC5 >= 2.79:
+                    if z.AMC5[Y][i][j] >= 2.79:
                         z.CNum = z.NewCN[2][l]
-                    elif z.AMC5 < 1.27:
-                        z.CNum = z.NewCN[0][l] + (z.CN[l] - z.NewCN[0][l]) * z.AMC5 / 1.27
+                    elif z.AMC5[Y][i][j] < 1.27:
+                        z.CNum = z.NewCN[0][l] + (z.CN[l] - z.NewCN[0][l]) * z.AMC5[Y][i][j] / 1.27
                     else:
-                        z.CNum = z.CN[l] + (z.NewCN[2][l] - z.CN[l]) * (z.AMC5 - 1.27) / 1.52
+                        z.CNum = z.CN[l] + (z.NewCN[2][l] - z.CN[l]) * (z.AMC5[Y][i][j] - 1.27) / 1.52
             else:
                 z.CNum = z.NewCN[2][l]
 
@@ -58,8 +58,8 @@ def CalcCN(z, i, Y, j):
                 z.Retention = 0
 
             # z.Water balance and runoff calculation
-            if z.Water >= 0.2 * z.Retention:
-                z.Qrun = (z.Water - 0.2 * z.Retention) ** 2 / (z.Water + 0.8 * z.Retention)
+            if z.Water[Y][i][j] >= 0.2 * z.Retention:
+                z.Qrun = (z.Water[Y][i][j] - 0.2 * z.Retention) ** 2 / (z.Water[Y][i][j] + 0.8 * z.Retention)
                 z.RuralQTotal += z.Qrun * z.Area[l] / z.RurAreaTotal
                 z.RurQRunoff[l][i] += z.Qrun
                 # TODO: (what is done with "DayQRunoff"? - appears not to be used)
@@ -98,7 +98,7 @@ def CalcCN(z, i, Y, j):
         z.NetSolidLoad[q] = 0
         z.NetDisLoad[q] = 0
 
-    if z.Water < 0.05:
+    if z.Water[Y][i][j] < 0.05:
         BasinWater(z, i, Y, j)
         return
     #else:
@@ -110,20 +110,20 @@ def CalcCN(z, i, Y, j):
             if z.MeltPest[Y][i][j] <= 0:
                 if z.Grow_Factor[i] > 0:
                     # Growing season
-                    if z.AMC5 >= 5.33:
+                    if z.AMC5[Y][i][j] >= 5.33:
                         z.CNumImperv = z.CNI[2][l]
-                    elif z.AMC5 < 3.56:
-                        z.CNumImperv = z.CNI[0][l] + (z.CNI[1][l] - z.CNI[0][l]) * z.AMC5 / 3.56
+                    elif z.AMC5[Y][i][j] < 3.56:
+                        z.CNumImperv = z.CNI[0][l] + (z.CNI[1][l] - z.CNI[0][l]) * z.AMC5[Y][i][j] / 3.56
                     else:
-                        z.CNumImperv = z.CNI[1][l] + (z.CNI[2][l] - z.CNI[1][l]) * (z.AMC5 - 3.56) / 1.77
+                        z.CNumImperv = z.CNI[1][l] + (z.CNI[2][l] - z.CNI[1][l]) * (z.AMC5[Y][i][j] - 3.56) / 1.77
                 else:
                     # Dormant season
-                    if z.AMC5 >= 2.79:
+                    if z.AMC5[Y][i][j] >= 2.79:
                         z.CNumImperv = z.CNI[2][l]
-                    elif z.AMC5 < 1.27:
-                        z.CNumImperv = z.CNI[0][l] + (z.CNI[1][l] - z.CNI[0][l]) * z.AMC5 / 1.27
+                    elif z.AMC5[Y][i][j] < 1.27:
+                        z.CNumImperv = z.CNI[0][l] + (z.CNI[1][l] - z.CNI[0][l]) * z.AMC5[Y][i][j] / 1.27
                     else:
-                        z.CNumImperv = z.CNI[1][l] + (z.CNI[2][l] - z.CNI[1][l]) * (z.AMC5 - 1.27) / 1.52
+                        z.CNumImperv = z.CNI[1][l] + (z.CNI[2][l] - z.CNI[1][l]) * (z.AMC5[Y][i][j] - 1.27) / 1.52
             else:
                 z.CNumImperv = z.CNI[2][l]
 
@@ -131,27 +131,27 @@ def CalcCN(z, i, Y, j):
             if z.CNumImpervReten < 0:
                 z.CNumImpervReten = 0
 
-            if z.Water >= 0.2 * z.CNumImpervReten:
-                z.QrunI[l] = (z.Water - 0.2 * z.CNumImpervReten) ** 2 / (z.Water + 0.8 * z.CNumImpervReten)
+            if z.Water[Y][i][j] >= 0.2 * z.CNumImpervReten:
+                z.QrunI[l] = (z.Water[Y][i][j] - 0.2 * z.CNumImpervReten) ** 2 / (z.Water[Y][i][j] + 0.8 * z.CNumImpervReten)
 
         if z.CNP[1][l] > 0:
             if z.MeltPest[Y][i][j] <= 0:
                 if z.Grow_Factor[i] > 0:
                     # Growing season
-                    if z.AMC5 >= 5.33:
+                    if z.AMC5[Y][i][j] >= 5.33:
                         z.CNumPerv = z.CNP[2][l]
-                    elif z.AMC5 < 3.56:
-                        z.CNumPerv = z.CNP[0][l] + (z.CNP[1][l] - z.CNP[0][l]) * z.AMC5 / 3.56
+                    elif z.AMC5[Y][i][j] < 3.56:
+                        z.CNumPerv = z.CNP[0][l] + (z.CNP[1][l] - z.CNP[0][l]) * z.AMC5[Y][i][j] / 3.56
                     else:
-                        z.CNumPerv = z.CNP[1][l] + (z.CNP[2][l] - z.CNP[1][l]) * (z.AMC5 - 3.56) / 1.77
+                        z.CNumPerv = z.CNP[1][l] + (z.CNP[2][l] - z.CNP[1][l]) * (z.AMC5[Y][i][j] - 3.56) / 1.77
                 else:
                     # Dormant season
-                    if z.AMC5 >= 2.79:
+                    if z.AMC5[Y][i][j] >= 2.79:
                         z.CNumPerv = z.CNP[2][l]
-                    elif z.AMC5 < 1.27:
-                        z.CNumPerv = z.CNP[0][l] + (z.CNP[1][l] - z.CNP[0][l]) * z.AMC5 / 1.27
+                    elif z.AMC5[Y][i][j] < 1.27:
+                        z.CNumPerv = z.CNP[0][l] + (z.CNP[1][l] - z.CNP[0][l]) * z.AMC5[Y][i][j] / 1.27
                     else:
-                        z.CNumPerv = z.CNP[1][l] + (z.CNP[2][l] - z.CNP[1][l]) * (z.AMC5 - 1.27) / 1.52
+                        z.CNumPerv = z.CNP[1][l] + (z.CNP[2][l] - z.CNP[1][l]) * (z.AMC5[Y][i][j] - 1.27) / 1.52
             else:
                 z.CNumPerv = z.CNP[2][l]
 
@@ -159,8 +159,8 @@ def CalcCN(z, i, Y, j):
             if z.CNumPervReten < 0:
                 z.CNumPervReten = 0
 
-            if z.Water >= 0.2 * z.CNumPervReten:
-                z.QrunP[l] = (z.Water - 0.2 * z.CNumPervReten) ** 2 / (z.Water + 0.8 * z.CNumPervReten)
+            if z.Water[Y][i][j] >= 0.2 * z.CNumPervReten:
+                z.QrunP[l] = (z.Water[Y][i][j] - 0.2 * z.CNumPervReten) ** 2 / (z.Water[Y][i][j] + 0.8 * z.CNumPervReten)
 
         lu = l - z.NRur
 
@@ -263,11 +263,11 @@ def BasinWater(z, i, Y, j):
                 z.DisBasinMass[q] = 0
 
                 if z.Storm > 0:
-                    z.UrbLoadRed = (z.Water / z.Storm) * z.UrbBMPRed[l][q]
+                    z.UrbLoadRed = (z.Water[Y][i][j] / z.Storm) * z.UrbBMPRed[l][q]
                 else:
                     z.UrbLoadRed = 0
 
-                if z.Water > z.Storm:
+                if z.Water[Y][i][j] > z.Storm:
                     z.UrbLoadRed = z.UrbBMPRed[l][q]
 
                 # TODO: Should 11 be NRur + 1?
