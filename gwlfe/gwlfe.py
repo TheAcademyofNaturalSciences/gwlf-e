@@ -40,6 +40,7 @@ import AvSeptPhos
 import Water
 import Rain
 import AMC5
+import NLU
 log = logging.getLogger(__name__)
 
 
@@ -110,6 +111,8 @@ def run(z):
     z.Rain = Rain.Rain(z.NYrs, z.DaysMonth, z.Temp, z.Prec)
 
     z.AMC5= AMC5.AMC5(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist)
+
+    z.NLU = NLU.NLU(z.NRur, z.NUrb)
 
 
 

@@ -4,7 +4,7 @@ import Water
 
 def AMC5(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist):
     result = np.zeros((NYrs, 12, 31))
-    water = Water.Water(NYrs, DaysMonth, Temp, Prec,InitialSnow)
+    water = Water.Water(NYrs, DaysMonth, Temp, Prec, InitialSnow)
     AMC5 = 0
     for k in range(5):
         AMC5 += AntMoist[k]

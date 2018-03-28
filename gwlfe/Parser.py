@@ -250,7 +250,7 @@ class GmsReader(object):
         z.BasinId = self.next(int)  # Basin ID
         self.next(EOL)
 
-        z.NLU = z.NRur + z.NUrb
+        #z.NLU = z.NRur + z.NUrb
 
         # Line 2:
         z.TranVersionNo = self.next(str)  # GWLF-E Version
