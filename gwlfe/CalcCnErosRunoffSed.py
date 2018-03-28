@@ -29,7 +29,7 @@ def CalcCN(z, i, Y, j):
 
     # Calculate Curve Number (CN)
     for l in range(z.NRur):
-        z.Qrun = 0
+        #z.Qrun = 0
         #grow_factor = GrowFlag.intval(z.Grow[i])
 
         if z.CN[l] > 0:
@@ -59,24 +59,24 @@ def CalcCN(z, i, Y, j):
 
             # z.Water balance and runoff calculation
             if z.Water[Y][i][j] >= 0.2 * z.Retention[Y][i][j][l]:
-                z.Qrun = (z.Water[Y][i][j] - 0.2 * z.Retention[Y][i][j][l]) ** 2 / (z.Water[Y][i][j] + 0.8 * z.Retention[Y][i][j][l])
-                z.RuralQTotal += z.Qrun * z.Area[l] / z.RurAreaTotal
-                z.RurQRunoff[l][i] += z.Qrun
+                #z.Qrun = (z.Water[Y][i][j] - 0.2 * z.Retention[Y][i][j][l]) ** 2 / (z.Water[Y][i][j] + 0.8 * z.Retention[Y][i][j][l])
+                # z.RuralQTotal += z.Qrun[Y][i][j][l] * z.Area[l] / z.RurAreaTotal
+                z.RurQRunoff[l][i] += z.Qrun[Y][i][j][l]
                 # TODO: (what is done with "DayQRunoff"? - appears not to be used)
                 # z.DayQRunoff[Y][i][j] = z.Qrun
                 # TODO: (What is done with "AgQRunoff? - apparently nothing)
-                if z.Landuse[l] is LandUse.CROPLAND:
-                    # (Maybe used for STREAMPLAN?)
-                    z.AgQTotal += z.Qrun * z.Area[l]
-                    # z.AgQRunoff[l][i] += z.Qrun
-                elif z.Landuse[l] is LandUse.HAY_PAST:
-                    z.AgQTotal += z.Qrun * z.Area[l]
-                    # z.AgQRunoff[l][i] += z.Qrun
-                elif z.Landuse[l] is LandUse.TURFGRASS:
-                    z.AgQTotal += z.Qrun * z.Area[l]
-                    # z.AgQRunoff[l][i] += z.Qrun
+                # if z.Landuse[l] is LandUse.CROPLAND:
+                #     # (Maybe used for STREAMPLAN?)
+                #     z.AgQTotal += z.Qrun[Y][i][j][l] * z.Area[l]
+                #     # z.AgQRunoff[l][i] += z.Qrun
+                # elif z.Landuse[l] is LandUse.HAY_PAST:
+                #     z.AgQTotal += z.Qrun[Y][i][j][l] * z.Area[l]
+                #     # z.AgQRunoff[l][i] += z.Qrun
+                # elif z.Landuse[l] is LandUse.TURFGRASS:
+                #     z.AgQTotal += z.Qrun[Y][i][j][l] * z.Area[l]
+                #     # z.AgQRunoff[l][i] += z.Qrun
             else:
-                z.Qrun = 0
+                z.Qrun[Y][i][j][l] = 0
 
         # EROSION, SEDIMENT WASHOFF FOR RURAL AND URBAN LANDUSE
         z.RurEros = 1.32 * z.Erosiv * z.KF[l] * z.LS[l] * z.C[l] * z.P[l] * z.Area[l]
@@ -328,10 +328,10 @@ def BasinWater(z, i, Y, j):
             z.DisLoad[Y][i][q] = 0
 
     # WATERSHED TOTALS
-    if z.RurAreaTotal > 0:
-        z.RuralQTotal *= z.RurAreaTotal / z.AreaTotal
-    else:
-        z.RuralQTotal = 0
+    # if z.RurAreaTotal > 0:
+    #     z.RuralQTotal *= z.RurAreaTotal / z.AreaTotal
+    # else:
+    #     z.RuralQTotal = 0
 
     if z.UrbAreaTotal > 0:
         z.UrbanQTotal *= z.UrbAreaTotal / z.AreaTotal
@@ -343,14 +343,14 @@ def BasinWater(z, i, Y, j):
     else:
         z.AdjUrbanQTotal = 0
 
-    if z.AgAreaTotal > 0:
-        z.AgQTotal = z.AgQTotal / z.AgAreaTotal
-    else:
-        z.AgQTotal = 0
+    # if z.AgAreaTotal > 0:
+    #     z.AgQTotal = z.AgQTotal / z.AgAreaTotal
+    # else:
+    #     z.AgQTotal = 0
 
-    z.QTotal = z.UrbanQTotal + z.RuralQTotal
+    z.QTotal = z.UrbanQTotal + z.RuralQTotal[Y][i][j]
     # Assume 20% reduction of runoff with urban wetlands
-    z.AdjQTotal = (z.AdjUrbanQTotal * (1 - (z.n25b * 0.2))) + z.RuralQTotal
+    z.AdjQTotal = (z.AdjUrbanQTotal * (1 - (z.n25b * 0.2))) + z.RuralQTotal[Y][i][j]
 
     z.SedTrans[Y][i] += z.AdjQTotal ** 1.67
 
@@ -360,10 +360,10 @@ def BasinWater(z, i, Y, j):
     else:
         z.Runoff[Y][i] += z.QTotal
 
-    z.RuralRunoff[Y][i] += z.RuralQTotal
+    z.RuralRunoff[Y][i] += z.RuralQTotal[Y][i][j]
     z.UrbanRunoff[Y][i] += z.UrbanQTotal
     # TODO: (Are z.AgRunoff and z.AgQTotal actually in cm?)
-    z.AgRunoff[Y][i] += z.AgQTotal
+    z.AgRunoff[Y][i] += z.AgQTotal[Y][i][j]
 
     # Convert Urban runoff from cm to Liters
     # TODO: (Maybe use z.UrbanRunoff[y][i] instead in the above equation)

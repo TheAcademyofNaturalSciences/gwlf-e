@@ -47,6 +47,10 @@ import Retention
 import CNI
 import CNP
 import CNumPerv
+import Qrun
+import AgAreaTotal
+import AgQTotal
+import RuralQTotal
 log = logging.getLogger(__name__)
 
 
@@ -132,6 +136,15 @@ def run(z):
 
     z.CNumPerv = CNumPerv.CNumPerv(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CNP, z.NRur, z.NUrb, z.Grow)
 
+    z.Qrun = Qrun.Qrun(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow)
+
+    z.AgAreaTotal = AgAreaTotal.AgAreaTotal(z.NRur, z.Landuse, z.Area)
+
+    z.AgQTotal = AgQTotal.AgQTotal(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb,
+                                   z.Grow, z.Landuse, z.Area)
+
+    z.RuralQTotal = RuralQTotal.RuralQTotal(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow, z.RurAreaTotal, z.Area, z.AreaTotal)
+
     for Y in range(z.NYrs):
         # Initialize monthly septic system variables
         z.MonthPondNitr = np.zeros(12)
@@ -165,8 +178,8 @@ def run(z):
                 z.Erosiv = 0
                 z.ET = 0
                 z.QTotal = 0
-                z.AgQTotal = 0
-                z.RuralQTotal = 0
+                # z.AgQTotal = 0
+                # z.RuralQTotal = 0
                 z.UrbanQTotal = 0
 
                 # Question: Are these values supposed to accumulate for each
