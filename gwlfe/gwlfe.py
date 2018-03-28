@@ -44,6 +44,9 @@ import NLU
 import NewCN
 import CNum
 import Retention
+import CNI
+import CNP
+import CNumPerv
 log = logging.getLogger(__name__)
 
 
@@ -122,6 +125,12 @@ def run(z):
     z.CNum = CNum.CNum(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow)
 
     z.Retention = Retention.Retention(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow)
+
+    z.CNI = CNI.CNI(z.NRur, z.NUrb, z.CNI)
+
+    z.CNP = CNP.CNP(z.NRur, z.NUrb, z.CNP)
+
+    z.CNumPerv = CNumPerv.CNumPerv(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CNP, z.NRur, z.NUrb, z.Grow)
 
     for Y in range(z.NYrs):
         # Initialize monthly septic system variables

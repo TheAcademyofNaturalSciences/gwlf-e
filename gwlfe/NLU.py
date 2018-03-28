@@ -3,7 +3,6 @@ from Timer import time_function
 
 
 def NLU(NRur,NUrb):
-    result = 0
     result = NRur + NUrb
     return result
 

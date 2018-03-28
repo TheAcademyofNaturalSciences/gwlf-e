@@ -135,27 +135,27 @@ def CalcCN(z, i, Y, j):
                 z.QrunI[l] = (z.Water[Y][i][j] - 0.2 * z.CNumImpervReten) ** 2 / (z.Water[Y][i][j] + 0.8 * z.CNumImpervReten)
 
         if z.CNP[1][l] > 0:
-            if z.MeltPest[Y][i][j] <= 0:
-                if z.Grow_Factor[i] > 0:
-                    # Growing season
-                    if z.AMC5[Y][i][j] >= 5.33:
-                        z.CNumPerv = z.CNP[2][l]
-                    elif z.AMC5[Y][i][j] < 3.56:
-                        z.CNumPerv = z.CNP[0][l] + (z.CNP[1][l] - z.CNP[0][l]) * z.AMC5[Y][i][j] / 3.56
-                    else:
-                        z.CNumPerv = z.CNP[1][l] + (z.CNP[2][l] - z.CNP[1][l]) * (z.AMC5[Y][i][j] - 3.56) / 1.77
-                else:
-                    # Dormant season
-                    if z.AMC5[Y][i][j] >= 2.79:
-                        z.CNumPerv = z.CNP[2][l]
-                    elif z.AMC5[Y][i][j] < 1.27:
-                        z.CNumPerv = z.CNP[0][l] + (z.CNP[1][l] - z.CNP[0][l]) * z.AMC5[Y][i][j] / 1.27
-                    else:
-                        z.CNumPerv = z.CNP[1][l] + (z.CNP[2][l] - z.CNP[1][l]) * (z.AMC5[Y][i][j] - 1.27) / 1.52
-            else:
-                z.CNumPerv = z.CNP[2][l]
+            # if z.MeltPest[Y][i][j] <= 0:
+            #     if z.Grow_Factor[i] > 0:
+            #         # Growing season
+            #         if z.AMC5[Y][i][j] >= 5.33:
+            #             z.CNumPerv = z.CNP[2][l]
+            #         elif z.AMC5[Y][i][j] < 3.56:
+            #             z.CNumPerv = z.CNP[0][l] + (z.CNP[1][l] - z.CNP[0][l]) * z.AMC5[Y][i][j] / 3.56
+            #         else:
+            #             z.CNumPerv = z.CNP[1][l] + (z.CNP[2][l] - z.CNP[1][l]) * (z.AMC5[Y][i][j] - 3.56) / 1.77
+            #     else:
+            #         # Dormant season
+            #         if z.AMC5[Y][i][j] >= 2.79:
+            #             z.CNumPerv = z.CNP[2][l]
+            #         elif z.AMC5[Y][i][j] < 1.27:
+            #             z.CNumPerv = z.CNP[0][l] + (z.CNP[1][l] - z.CNP[0][l]) * z.AMC5[Y][i][j] / 1.27
+            #         else:
+            #             z.CNumPerv = z.CNP[1][l] + (z.CNP[2][l] - z.CNP[1][l]) * (z.AMC5[Y][i][j] - 1.27) / 1.52
+            # else:
+            #     z.CNumPerv = z.CNP[2][l]
 
-            z.CNumPervReten = 2540 / z.CNumPerv - 25.4
+            z.CNumPervReten = 2540 / z.CNumPerv[Y][i][j][l] - 25.4
             if z.CNumPervReten < 0:
                 z.CNumPervReten = 0
 
