@@ -41,6 +41,9 @@ import Water
 import Rain
 import AMC5
 import NLU
+import NewCN
+import CNum
+import Retention
 log = logging.getLogger(__name__)
 
 
@@ -114,7 +117,11 @@ def run(z):
 
     z.NLU = NLU.NLU(z.NRur, z.NUrb)
 
+    z.NewCN = NewCN.NewCN(z.CN, z.NRur, z.NUrb)
 
+    z.CNum = CNum.CNum(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow)
+
+    z.Retention = Retention.Retention(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow)
 
     for Y in range(z.NYrs):
         # Initialize monthly septic system variables
@@ -165,7 +172,7 @@ def run(z):
                 # TODO: If Water is <= 0.01, then CalcCNErosRunoffSed
                 # never executes, and CNum will remain undefined.
                 # What should the default value for CNum be in this case?
-                z.CNum = 0
+                #z.CNum = 0
 
                 # RAIN , SNOWMELT, EVAPOTRANSPIRATION (ET)
                 if z.DailyTemp <= 0:
@@ -201,7 +208,7 @@ def run(z):
                         CalcCnErosRunoffSed.CalcCN(z, i, Y, j)
 
                 # DAILY CN
-                z.DailyCN[Y][i][j] = z.CNum
+                #z.DailyCN[Y][i][j] = z.CNum[Y][i][j] #Do we need to keep DailyCN?
 
                 # UPDATE ANTECEDENT RAIN+MELT CONDITION
                 # Subtract AMC5 by the sum of AntMoist (day 5) and Water
