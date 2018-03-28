@@ -6,9 +6,9 @@ import AMC5
 import Grow_Factor
 
 
-def CNum(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, CN, NRur, NUrb, Grow):
+def CNum(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, CN, NRur, NLU, Grow):
     _,meltpest = InitSnow.InitSnow(NYrs, DaysMonth, Temp, Prec, InitialSnow)
-    newcn = NewCN.NewCN(CN, NRur, NUrb)
+    newcn = NewCN.NewCN(CN, NRur, NLU)
     amc5 = AMC5.AMC5(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist)
     grow_factor = Grow_Factor.Grow_Factor(NYrs, DaysMonth, Grow)
     result = np.zeros((NYrs, 12, 31, NRur))

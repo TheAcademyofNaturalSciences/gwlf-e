@@ -54,6 +54,8 @@ import RuralQTotal
 import CNumImperv
 import CNumPervReten
 import CNumImpervReten
+import AgRunoff
+import TileDrainRO
 log = logging.getLogger(__name__)
 
 
@@ -127,11 +129,11 @@ def run(z):
 
     #z.NLU = NLU.NLU(z.NRur, z.NUrb)
 
-    z.NewCN = NewCN.NewCN(z.CN, z.NRur, z.NUrb)
+    z.NewCN = NewCN.NewCN(z.CN, z.NRur, z.NLU)
 
-    z.CNum = CNum.CNum(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow)
+    z.CNum = CNum.CNum(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NLU, z.Grow)
 
-    z.Retention = Retention.Retention(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow)
+    z.Retention = Retention.Retention(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NLU, z.Grow)
 
     z.CNI = CNI.CNI(z.NRur, z.NLU, z.CNI)
 
@@ -139,14 +141,14 @@ def run(z):
 
     z.CNumPerv = CNumPerv.CNumPerv(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CNP, z.NRur, z.NLU, z.Grow)
 
-    z.Qrun = Qrun.Qrun(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow)
+    z.Qrun = Qrun.Qrun(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NLU, z.Grow)
 
     z.AgAreaTotal = AgAreaTotal.AgAreaTotal(z.NRur, z.Landuse, z.Area)
 
-    z.AgQTotal = AgQTotal.AgQTotal(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb,
+    z.AgQTotal = AgQTotal.AgQTotal(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NLU,
                                    z.Grow, z.Landuse, z.Area)
 
-    z.RuralQTotal = RuralQTotal.RuralQTotal(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow, z.RurAreaTotal, z.Area, z.AreaTotal)
+    z.RuralQTotal = RuralQTotal.RuralQTotal(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NLU, z.Grow, z.RurAreaTotal, z.Area, z.AreaTotal)
 
     z.CNumImperv = CNumImperv.CNumImperv(z.NYrs, z.DaysMonth, z.NRur, z.NLU, z.CNI, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.Grow)
 
@@ -154,6 +156,10 @@ def run(z):
 
     z.CNumImpervReten = CNumImpervReten.CNumImpervReten(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNI, z.Grow)
 
+    z.AgRunoff = AgRunoff.AgRunoff(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NLU,
+                                   z.Grow, z.Landuse, z.Area)
+    z.TileDrainRO = TileDrainRO.TileDrainRO(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur,
+                                           z.NLU, z.Grow, z.Landuse, z.Area, z.TileDrainDensity)
     for Y in range(z.NYrs):
         # Initialize monthly septic system variables
         z.MonthPondNitr = np.zeros(12)
@@ -374,8 +380,8 @@ def run(z):
             # z.PtSrcFlow[Y][i] = z.PtSrcFlow[Y][i] + z.PointFlow[i]
 
             # CALCULATE THE SURFACE RUNOFF PORTION OF TILE DRAINAGE
-            z.TileDrainRO[Y][i] = (z.TileDrainRO[Y][i] + [z.AgRunoff[Y][i] *
-                                                          z.TileDrainDensity])
+            # z.TileDrainRO[Y][i] = (z.TileDrainRO[Y][i] + [z.AgRunoff[Y][i] *
+            #                                               z.TileDrainDensity])
 
             # CALCULATE SUBSURFACE PORTION OF TILE DRAINAGE
             if z.AreaTotal > 0:

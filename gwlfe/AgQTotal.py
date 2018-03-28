@@ -7,11 +7,11 @@ from .enums import LandUse
 import AgAreaTotal
 
 
-def AgQTotal(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, CN, NRur, NUrb, Grow, Landuse, Area):
+def AgQTotal(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, CN, NRur, NLU, Grow, Landuse, Area):
     result = np.zeros((NYrs, 12, 31))
     water = Water.Water(NYrs, DaysMonth, Temp, Prec, InitialSnow)
-    retention = Retention.Retention(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, CN, NRur, NUrb, Grow)
-    qrun = Qrun.Qrun(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, CN, NRur, NUrb, Grow)
+    retention = Retention.Retention(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, CN, NRur, NLU, Grow)
+    qrun = Qrun.Qrun(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, CN, NRur, NLU, Grow)
     agareatotal = AgAreaTotal.AgAreaTotal(NRur, Landuse, Area)
     for Y in range(NYrs):
         for i in range(12):

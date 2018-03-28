@@ -363,7 +363,7 @@ def BasinWater(z, i, Y, j):
     z.RuralRunoff[Y][i] += z.RuralQTotal[Y][i][j]
     z.UrbanRunoff[Y][i] += z.UrbanQTotal
     # TODO: (Are z.AgRunoff and z.AgQTotal actually in cm?)
-    z.AgRunoff[Y][i] += z.AgQTotal[Y][i][j]
+    #z.AgRunoff[Y][i] += z.AgQTotal[Y][i][j]
 
     # Convert Urban runoff from cm to Liters
     # TODO: (Maybe use z.UrbanRunoff[y][i] instead in the above equation)

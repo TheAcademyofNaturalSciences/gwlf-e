@@ -2,9 +2,9 @@ import numpy as np
 from Timer import time_function
 import NLU
 
-def NewCN(CN, NRur, NUrb):
-    nlu= NLU.NLU(NRur, NUrb)
-    result = np.zeros((3, nlu))
+def NewCN(CN, NRur, NLU):
+    #nlu= NLU.NLU(NRur, NUrb)
+    result = np.zeros((3, NLU))
     for l in range(NRur):
         result[0][l] = CN[l] / (2.334 - 0.01334 * CN[l])
         result[2][l] = CN[l] / (0.4036 + 0.0059 * CN[l])

@@ -4,10 +4,10 @@ import Water
 import Retention
 
 
-def Qrun(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, CN, NRur, NUrb, Grow):
+def Qrun(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, CN, NRur, NLU, Grow):
     result = np.zeros((NYrs, 12, 31, NRur))
     water = Water.Water(NYrs, DaysMonth, Temp, Prec,InitialSnow)
-    retention = Retention.Retention(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, CN, NRur, NUrb, Grow)
+    retention = Retention.Retention(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, CN, NRur, NLU, Grow)
     for Y in range(NYrs):
         for i in range(12):
             for j in range(DaysMonth[Y][i]):
