@@ -40,7 +40,7 @@ import AvSeptPhos
 import Water
 import Rain
 import AMC5
-import NLU
+#import NLU
 import NewCN
 import CNum
 import Retention
@@ -125,7 +125,7 @@ def run(z):
 
     z.AMC5= AMC5.AMC5(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist)
 
-    z.NLU = NLU.NLU(z.NRur, z.NUrb)
+    #z.NLU = NLU.NLU(z.NRur, z.NUrb)
 
     z.NewCN = NewCN.NewCN(z.CN, z.NRur, z.NUrb)
 
@@ -133,11 +133,11 @@ def run(z):
 
     z.Retention = Retention.Retention(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow)
 
-    z.CNI = CNI.CNI(z.NRur, z.NUrb, z.CNI)
+    z.CNI = CNI.CNI(z.NRur, z.NLU, z.CNI)
 
-    z.CNP = CNP.CNP(z.NRur, z.NUrb, z.CNP)
+    z.CNP = CNP.CNP(z.NRur, z.NLU, z.CNP)
 
-    z.CNumPerv = CNumPerv.CNumPerv(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CNP, z.NRur, z.NUrb, z.Grow)
+    z.CNumPerv = CNumPerv.CNumPerv(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CNP, z.NRur, z.NLU, z.Grow)
 
     z.Qrun = Qrun.Qrun(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow)
 
@@ -148,11 +148,11 @@ def run(z):
 
     z.RuralQTotal = RuralQTotal.RuralQTotal(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow, z.RurAreaTotal, z.Area, z.AreaTotal)
 
-    z.CNumImperv = CNumImperv.CNumImperv(z.NYrs, z.DaysMonth, z.NRur, z.NUrb, z.CNI, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.Grow)
+    z.CNumImperv = CNumImperv.CNumImperv(z.NYrs, z.DaysMonth, z.NRur, z.NLU, z.CNI, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.Grow)
 
-    z.CNumPervReten = CNumPervReten.CNumPervReten(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NUrb, z.CNP, z.Grow)
+    z.CNumPervReten = CNumPervReten.CNumPervReten(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNP, z.Grow)
 
-    z.CNumImpervReten = CNumImpervReten.CNumImpervReten(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NUrb, z.CNI, z.Grow)
+    z.CNumImpervReten = CNumImpervReten.CNumImpervReten(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNI, z.Grow)
 
     for Y in range(z.NYrs):
         # Initialize monthly septic system variables

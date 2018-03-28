@@ -1,23 +1,23 @@
 import numpy as np
 from Timer import time_function
 import CNP
-import NLU
+#import NLU
 import InitSnow
 import Grow_Factor
 import AMC5
 
 
-def CNumPerv(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, Cnp, NRur, NUrb, Grow):
-    cnp = CNP.CNP(NRur, NUrb, Cnp)
-    nlu = NLU.NLU(NRur, NUrb)
+def CNumPerv(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, Cnp, NRur, NLU, Grow):
+    cnp = CNP.CNP(NRur, NLU, Cnp)
+    #nlu = NLU.NLU(NRur, NUrb)
     _,meltpest = InitSnow.InitSnow(NYrs, DaysMonth, Temp, Prec, InitialSnow)
     grow_factor = Grow_Factor.Grow_Factor(NYrs, DaysMonth, Grow)
     amc5 = AMC5.AMC5(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist)
-    result = np.zeros((NYrs, 12, 31, nlu))
+    result = np.zeros((NYrs, 12, 31, NLU))
     for Y in range(NYrs):
         for i in range(12):
             for j in range(DaysMonth[Y][i]):
-                for l in range(NRur, nlu):
+                for l in range(NRur, NLU):
                     if cnp[1][l] > 0:
                         if meltpest[Y][i][j] <= 0:
                             if grow_factor[i] > 0:
