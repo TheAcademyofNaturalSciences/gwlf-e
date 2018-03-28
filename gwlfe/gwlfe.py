@@ -56,6 +56,8 @@ import CNumPervReten
 import CNumImpervReten
 import AgRunoff
 import TileDrainRO
+import QrunP
+import QrunI
 log = logging.getLogger(__name__)
 
 
@@ -158,8 +160,14 @@ def run(z):
 
     z.AgRunoff = AgRunoff.AgRunoff(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NLU,
                                    z.Grow, z.Landuse, z.Area)
+
     z.TileDrainRO = TileDrainRO.TileDrainRO(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur,
                                            z.NLU, z.Grow, z.Landuse, z.Area, z.TileDrainDensity)
+
+    z.QrunP = QrunP.QrunP(z.NYrs, z.DaysMonth ,z. Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNP, z.Grow)
+
+    z.QrunI = QrunI.QrunI(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNI, z.Grow)
+
     for Y in range(z.NYrs):
         # Initialize monthly septic system variables
         z.MonthPondNitr = np.zeros(12)
