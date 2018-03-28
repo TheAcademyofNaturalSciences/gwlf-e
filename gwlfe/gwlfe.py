@@ -37,6 +37,9 @@ import MonthDischargePhos
 import DisSeptPhos
 import SepticPhos
 import AvSeptPhos
+import Water
+import Rain
+import AMC5
 log = logging.getLogger(__name__)
 
 
@@ -102,6 +105,14 @@ def run(z):
                                                 , z.NumShortSys, z.NumDischargeSys, z.PhosSepticLoad
                                                 , z.PhosPlantUptake, z.Grow)
 
+    z.Water = Water.Water(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow)
+
+    z.Rain = Rain.Rain(z.NYrs, z.DaysMonth, z.Temp, z.Prec)
+
+    z.AMC5= AMC5.AMC5(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist)
+
+
+
     for Y in range(z.NYrs):
         # Initialize monthly septic system variables
         z.MonthPondNitr = np.zeros(12)
@@ -130,8 +141,8 @@ def run(z):
                 z.DailyTemp = z.Temp[Y][i][j]
                 z.DailyPrec = z.Prec[Y][i][j]
                 #z.Melt = 0
-                z.Rain = 0
-                z.Water = 0
+                #z.Rain = 0
+                #z.Water = 0
                 z.Erosiv = 0
                 z.ET = 0
                 z.QTotal = 0
@@ -158,7 +169,7 @@ def run(z):
                     #z.InitSnow = z.InitSnow + z.DailyPrec
                     pass
                 else:
-                    z.Rain = z.DailyPrec
+                    # z.Rain = z.DailyPrec
                     # if z.InitSnow > 0.001:
                     #     # A DEGREE-DAY INITSNOW MELT, BUT NO MORE THAN EXISTED
                     #     # INITSNOW
@@ -174,16 +185,16 @@ def run(z):
                     #     z.MeltPest[Y][i][j] = 0
 
                     # AVAILABLE WATER CALCULATION
-                    z.Water = z.Rain + z.MeltPest[Y][i][j]
-                    z.DailyWater[Y][i][j] = z.Water
+                    # z.Water = z.Rain[Y][i][j] + z.MeltPest[Y][i][j]
+                    z.DailyWater[Y][i][j] = z.Water[Y][i][j]
 
                     # Compute erosivity when erosion occurs, i.e., with rain and no InitSnow left
-                    if z.Rain > 0 and z.InitSnow[Y][i][j] < 0.001:
-                        z.Erosiv = 6.46 * z.Acoef[i] * z.Rain ** 1.81
+                    if z.Rain[Y][i][j] > 0 and z.InitSnow[Y][i][j] < 0.001:
+                        z.Erosiv = 6.46 * z.Acoef[i] * z.Rain[Y][i][j] ** 1.81
 
                     # IF WATER AVAILABLE, THEN CALL SUB TO COMPUTE CN, RUNOFF,
                     # EROSION AND SEDIMENT
-                    if z.Water > 0.01:
+                    if z.Water[Y][i][j] > 0.01:
                         CalcCnErosRunoffSed.CalcCN(z, i, Y, j)
 
                 # DAILY CN
@@ -191,15 +202,15 @@ def run(z):
 
                 # UPDATE ANTECEDENT RAIN+MELT CONDITION
                 # Subtract AMC5 by the sum of AntMoist (day 5) and Water
-                z.AMC5 = z.AMC5 - z.AntMoist[4] + z.Water
-                z.DailyAMC5[Y][i][j] = z.AMC5
+                #z.AMC5 = z.AMC5 - z.AntMoist[4] + z.Water[Y][i][j]
+                z.DailyAMC5[Y][i][j] = z.AMC5[Y][i][j]
 
                 # Shift AntMoist values to the right.
-                z.AntMoist[4] = z.AntMoist[3]
-                z.AntMoist[3] = z.AntMoist[2]
-                z.AntMoist[2] = z.AntMoist[1]
-                z.AntMoist[1] = z.AntMoist[0]
-                z.AntMoist[0] = z.Water
+                # z.AntMoist[4] = z.AntMoist[3]
+                # z.AntMoist[3] = z.AntMoist[2]
+                # z.AntMoist[2] = z.AntMoist[1]
+                # z.AntMoist[1] = z.AntMoist[0]
+                # z.AntMoist[0] = z.Water[Y][i][j]
 
                 # CALCULATE ET FROM SATURATED VAPOR PRESSURE,
                 # HAMON (1961) METHOD
@@ -224,8 +235,8 @@ def run(z):
 
                 # ***** WATERSHED WATER BALANCE *****
 
-                if z.QTotal <= z.Water:
-                    z.Infiltration = z.Water - z.QTotal
+                if z.QTotal <= z.Water[Y][i][j]:
+                    z.Infiltration = z.Water[Y][i][j] - z.QTotal
                 z.GrFlow = z.RecessionCoef * z.SatStor
                 z.DeepSeep = z.SeepCoef * z.SatStor
 
