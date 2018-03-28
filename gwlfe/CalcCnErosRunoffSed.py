@@ -107,32 +107,32 @@ def CalcCN(z, i, Y, j):
 
         # Find curve number
         if z.CNI[1][l] > 0:
-            if z.MeltPest[Y][i][j] <= 0:
-                if z.Grow_Factor[i] > 0:
-                    # Growing season
-                    if z.AMC5[Y][i][j] >= 5.33:
-                        z.CNumImperv = z.CNI[2][l]
-                    elif z.AMC5[Y][i][j] < 3.56:
-                        z.CNumImperv = z.CNI[0][l] + (z.CNI[1][l] - z.CNI[0][l]) * z.AMC5[Y][i][j] / 3.56
-                    else:
-                        z.CNumImperv = z.CNI[1][l] + (z.CNI[2][l] - z.CNI[1][l]) * (z.AMC5[Y][i][j] - 3.56) / 1.77
-                else:
-                    # Dormant season
-                    if z.AMC5[Y][i][j] >= 2.79:
-                        z.CNumImperv = z.CNI[2][l]
-                    elif z.AMC5[Y][i][j] < 1.27:
-                        z.CNumImperv = z.CNI[0][l] + (z.CNI[1][l] - z.CNI[0][l]) * z.AMC5[Y][i][j] / 1.27
-                    else:
-                        z.CNumImperv = z.CNI[1][l] + (z.CNI[2][l] - z.CNI[1][l]) * (z.AMC5[Y][i][j] - 1.27) / 1.52
-            else:
-                z.CNumImperv = z.CNI[2][l]
+            # if z.MeltPest[Y][i][j] <= 0:
+            #     if z.Grow_Factor[i] > 0:
+            #         # Growing season
+            #         if z.AMC5[Y][i][j] >= 5.33:
+            #             z.CNumImperv = z.CNI[2][l]
+            #         elif z.AMC5[Y][i][j] < 3.56:
+            #             z.CNumImperv = z.CNI[0][l] + (z.CNI[1][l] - z.CNI[0][l]) * z.AMC5[Y][i][j] / 3.56
+            #         else:
+            #             z.CNumImperv = z.CNI[1][l] + (z.CNI[2][l] - z.CNI[1][l]) * (z.AMC5[Y][i][j] - 3.56) / 1.77
+            #     else:
+            #         # Dormant season
+            #         if z.AMC5[Y][i][j] >= 2.79:
+            #             z.CNumImperv = z.CNI[2][l]
+            #         elif z.AMC5[Y][i][j] < 1.27:
+            #             z.CNumImperv = z.CNI[0][l] + (z.CNI[1][l] - z.CNI[0][l]) * z.AMC5[Y][i][j] / 1.27
+            #         else:
+            #             z.CNumImperv = z.CNI[1][l] + (z.CNI[2][l] - z.CNI[1][l]) * (z.AMC5[Y][i][j] - 1.27) / 1.52
+            # else:
+            #     z.CNumImperv = z.CNI[2][l]
 
-            z.CNumImpervReten = 2540 / z.CNumImperv - 25.4
-            if z.CNumImpervReten < 0:
-                z.CNumImpervReten = 0
+            # z.CNumImpervReten = 2540 / z.CNumImperv[Y][i][j][l] - 25.4
+            # if z.CNumImpervReten < 0:
+            #     z.CNumImpervReten = 0
 
-            if z.Water[Y][i][j] >= 0.2 * z.CNumImpervReten:
-                z.QrunI[l] = (z.Water[Y][i][j] - 0.2 * z.CNumImpervReten) ** 2 / (z.Water[Y][i][j] + 0.8 * z.CNumImpervReten)
+            if z.Water[Y][i][j] >= 0.2 * z.CNumImpervReten[Y][i][j][l]:
+                z.QrunI[l] = (z.Water[Y][i][j] - 0.2 * z.CNumImpervReten[Y][i][j][l]) ** 2 / (z.Water[Y][i][j] + 0.8 * z.CNumImpervReten[Y][i][j][l])
 
         if z.CNP[1][l] > 0:
             # if z.MeltPest[Y][i][j] <= 0:
@@ -155,12 +155,12 @@ def CalcCN(z, i, Y, j):
             # else:
             #     z.CNumPerv = z.CNP[2][l]
 
-            z.CNumPervReten = 2540 / z.CNumPerv[Y][i][j][l] - 25.4
-            if z.CNumPervReten < 0:
-                z.CNumPervReten = 0
+            # z.CNumPervReten = 2540 / z.CNumPerv[Y][i][j][l] - 25.4
+            # if z.CNumPervReten < 0:
+            #     z.CNumPervReten = 0
 
-            if z.Water[Y][i][j] >= 0.2 * z.CNumPervReten:
-                z.QrunP[l] = (z.Water[Y][i][j] - 0.2 * z.CNumPervReten) ** 2 / (z.Water[Y][i][j] + 0.8 * z.CNumPervReten)
+            if z.Water[Y][i][j] >= 0.2 * z.CNumPervReten[Y][i][j][l]:
+                z.QrunP[l] = (z.Water[Y][i][j] - 0.2 * z.CNumPervReten[Y][i][j][l]) ** 2 / (z.Water[Y][i][j] + 0.8 * z.CNumPervReten[Y][i][j][l])
 
         lu = l - z.NRur
 

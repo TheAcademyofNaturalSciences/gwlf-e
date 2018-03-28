@@ -51,6 +51,9 @@ import Qrun
 import AgAreaTotal
 import AgQTotal
 import RuralQTotal
+import CNumImperv
+import CNumPervReten
+import CNumImpervReten
 log = logging.getLogger(__name__)
 
 
@@ -144,6 +147,12 @@ def run(z):
                                    z.Grow, z.Landuse, z.Area)
 
     z.RuralQTotal = RuralQTotal.RuralQTotal(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NUrb, z.Grow, z.RurAreaTotal, z.Area, z.AreaTotal)
+
+    z.CNumImperv = CNumImperv.CNumImperv(z.NYrs, z.DaysMonth, z.NRur, z.NUrb, z.CNI, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.Grow)
+
+    z.CNumPervReten = CNumPervReten.CNumPervReten(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NUrb, z.CNP, z.Grow)
+
+    z.CNumImpervReten = CNumImpervReten.CNumImpervReten(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NUrb, z.CNI, z.Grow)
 
     for Y in range(z.NYrs):
         # Initialize monthly septic system variables

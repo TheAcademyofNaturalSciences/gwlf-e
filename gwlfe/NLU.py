@@ -2,7 +2,7 @@ import numpy as np
 from Timer import time_function
 
 
-def NLU(NRur,NUrb):
+def NLU(NRur, NUrb):
     result = NRur + NUrb
     return result
 
