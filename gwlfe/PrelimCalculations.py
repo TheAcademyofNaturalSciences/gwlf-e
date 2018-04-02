@@ -36,11 +36,13 @@ def InitialCalculations(z):
         # if z.NewCN[2][l] > 100:
         #     z.NewCN[2][l] = 100
 
-    # for l in range(z.NRur, z.NLU):
-    #     z.CNI[0][l] = z.CNI[1][l] / (2.334 - 0.01334 * z.CNI[1][1])
-    #     z.CNI[2][l] = z.CNI[1][l] / (0.4036 + 0.0059 * z.CNI[1][l])
-    #    z.CNP[0][l] = z.CNP[1][l] / (2.334 - 0.01334 * z.CNP[1][1])
-    #     z.CNP[2][l] = z.CNP[1][l] / (0.4036 + 0.0059 * z.CNP[1][l])
+    for l in range(z.NRur, z.NLU):
+         z.CNI[0][l] = z.CNI[1][l] / (2.334 - 0.01334 * z.CNI[1][1])
+         z.CNIStorage[0][l] = z.CNI[0][l]
+         z.CNI[2][l] = z.CNI[1][l] / (0.4036 + 0.0059 * z.CNI[1][l])
+         z.CNIStorage[2][l] = z.CNI[2][l]
+         z.CNP[0][l] = z.CNP[1][l] / (2.334 - 0.01334 * z.CNP[1][1])
+         z.CNP[2][l] = z.CNP[1][l] / (0.4036 + 0.0059 * z.CNP[1][l])
 
     if z.FilterWidth <= 30:
         z.FilterEff = z.FilterWidth / 30
@@ -77,6 +79,6 @@ def InitialCalculations(z):
             z.Difference = z.Volume
 
     # ANTECEDANT MOISTURE OUT TO 5 DAYS
-    #z.AMC5 = 0
-    # for k in range(5):
-    #     z.AMC5 += z.AntMoist[k]
+    z.AMC5 = 0
+    for k in range(5):
+        z.AMC5 += z.AntMoist[k]

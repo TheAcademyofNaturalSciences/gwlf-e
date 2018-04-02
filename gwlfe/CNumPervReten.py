@@ -5,10 +5,10 @@ import CNP
 import CNumPerv
 
 
-def CNumPervReten(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NLU, Cnp, Grow):
+def CNumPervReten(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NLU, cnp, Grow):
     #nlu = NLU.NLU(NRur, NUrb)
-    cnp = CNP.CNP(NRur, NLU, Cnp)
-    cnumperv = CNumPerv.CNumPerv(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, Cnp, NRur, NLU, Grow)
+    #cnp = CNP.CNP(NRur, NLU, Cnp)
+    cnumperv = CNumPerv.CNumPerv(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, cnp, NRur, NLU, Grow)
     result = np.zeros((NYrs, 12, 31, NLU))
     for Y in range(NYrs):
         for i in range(12):

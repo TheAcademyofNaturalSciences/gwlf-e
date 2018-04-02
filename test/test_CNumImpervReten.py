@@ -3,7 +3,7 @@ from unittest import skip
 from mock import patch
 import numpy as np
 from gwlfe import Parser
-from gwlfe import CNumImpervReten
+from gwlfe import CNumImpervReten, gwlfe
 
 
 class TestCNumImpervReten(unittest.TestCase):
@@ -14,6 +14,14 @@ class TestCNumImpervReten(unittest.TestCase):
 
     def test_CNumImpervReten(self):
         z = self.z
+        _, z = gwlfe.run(z)
         np.testing.assert_array_almost_equal(
-            CNumImpervReten.CNumImpervReten_2(),
-            CNumImpervReten.CNumImpervReten(), decimal=7)
+            z.CNumImpervRetenStorage,
+            z.CNumImpervReten_isolate, decimal=7)
+
+
+    # def test_CNumImpervReten(self):
+    #     z = self.z
+    #     np.testing.assert_array_almost_equal(
+    #         CNumImpervReten.CNumImpervReten_2(),
+    #         CNumImpervReten.CNumImpervReten(), decimal=7)

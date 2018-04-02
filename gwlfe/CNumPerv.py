@@ -7,8 +7,8 @@ import Grow_Factor
 import AMC5
 
 
-def CNumPerv(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, Cnp, NRur, NLU, Grow):
-    cnp = CNP.CNP(NRur, NLU, Cnp)
+def CNumPerv(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, cnp, NRur, NLU, Grow):
+    #cnp = CNP.CNP(NRur, NLU, Cnp)
     #nlu = NLU.NLU(NRur, NUrb)
     _,meltpest = InitSnow.InitSnow(NYrs, DaysMonth, Temp, Prec, InitialSnow)
     grow_factor = Grow_Factor.Grow_Factor(NYrs, DaysMonth, Grow)

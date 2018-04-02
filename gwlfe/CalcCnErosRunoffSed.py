@@ -89,8 +89,10 @@ def CalcCN(z, i, Y, j):
             z.SedDelivRatio = 0.0001
 
     for l in range(z.NRur, z.NLU):
-        #z.QrunI[l] = 0
-        #z.QrunP[l] = 0
+        z.QrunI[l] = 0
+        z.QrunIStorage[Y][i][j][l] = 0
+        z.QrunP[l] = 0
+        z.QrunPStorage[Y][i][j][l] = 0
         z.WashImperv[l] = 0
         z.WashPerv[l] = 0
 
@@ -106,94 +108,112 @@ def CalcCN(z, i, Y, j):
         #grow_factor = GrowFlag.intval(z.Grow[i])
 
         # Find curve number
-        #if z.CNI[1][l] > 0:
-            # if z.MeltPest[Y][i][j] <= 0:
-            #     if z.Grow_Factor[i] > 0:
-            #         # Growing season
-            #         if z.AMC5[Y][i][j] >= 5.33:
-            #             z.CNumImperv = z.CNI[2][l]
-            #         elif z.AMC5[Y][i][j] < 3.56:
-            #             z.CNumImperv = z.CNI[0][l] + (z.CNI[1][l] - z.CNI[0][l]) * z.AMC5[Y][i][j] / 3.56
-            #         else:
-            #             z.CNumImperv = z.CNI[1][l] + (z.CNI[2][l] - z.CNI[1][l]) * (z.AMC5[Y][i][j] - 3.56) / 1.77
-            #     else:
-            #         # Dormant season
-            #         if z.AMC5[Y][i][j] >= 2.79:
-            #             z.CNumImperv = z.CNI[2][l]
-            #         elif z.AMC5[Y][i][j] < 1.27:
-            #             z.CNumImperv = z.CNI[0][l] + (z.CNI[1][l] - z.CNI[0][l]) * z.AMC5[Y][i][j] / 1.27
-            #         else:
-            #             z.CNumImperv = z.CNI[1][l] + (z.CNI[2][l] - z.CNI[1][l]) * (z.AMC5[Y][i][j] - 1.27) / 1.52
-            # else:
-            #     z.CNumImperv = z.CNI[2][l]
+        if z.CNI[1][l] > 0:
+            if z.MeltPest[Y][i][j] <= 0:
+                if z.Grow_Factor[i] > 0:
+                    # Growing season
+                    if z.AMC5_isolate[Y][i][j] >= 5.33:
+                        z.CNumImperv = z.CNI[2][l]
+                        z.CNumImpervStorage[Y][i][j][l] = z.CNumImperv
+                    elif z.AMC5_isolate[Y][i][j] < 3.56:
+                        z.CNumImperv = z.CNI[0][l] + (z.CNI[1][l] - z.CNI[0][l]) * z.AMC5_isolate[Y][i][j] / 3.56
+                        z.CNumImpervStorage[Y][i][j][l] = z.CNumImperv
+                    else:
+                        z.CNumImperv = z.CNI[1][l] + (z.CNI[2][l] - z.CNI[1][l]) * (z.AMC5_isolate[Y][i][j] - 3.56) / 1.77
+                        z.CNumImpervStorage[Y][i][j][l] = z.CNumImperv
+                else:
+                    # Dormant season
+                    if z.AMC5_isolate[Y][i][j] >= 2.79:
+                        z.CNumImperv = z.CNI[2][l]
+                        z.CNumImpervStorage[Y][i][j][l] = z.CNumImperv
+                    elif z.AMC5_isolate[Y][i][j] < 1.27:
+                        z.CNumImperv = z.CNI[0][l] + (z.CNI[1][l] - z.CNI[0][l]) * z.AMC5_isolate[Y][i][j] / 1.27
+                        z.CNumImpervStorage[Y][i][j][l] = z.CNumImperv
+                    else:
+                        z.CNumImperv = z.CNI[1][l] + (z.CNI[2][l] - z.CNI[1][l]) * (z.AMC5_isolate[Y][i][j] - 1.27) / 1.52
+                        z.CNumImpervStorage[Y][i][j][l] = z.CNumImperv
+            else:
+                z.CNumImperv = z.CNI[2][l]
+                z.CNumImpervStorage[Y][i][j][l] = z.CNumImperv
 
-            # z.CNumImpervReten = 2540 / z.CNumImperv[Y][i][j][l] - 25.4
-            # if z.CNumImpervReten < 0:
-            #     z.CNumImpervReten = 0
+            z.CNumImpervReten = 2540 / z.CNumImperv - 25.4
+            z.CNumImpervRetenStorage[Y][i][j][l] = z.CNumImpervReten
+            if z.CNumImpervReten < 0:
+                z.CNumImpervReten = 0
+                z.CNumImpervRetenStorage[Y][i][j][l] = 0
 
-            # if z.Water[Y][i][j] >= 0.2 * z.CNumImpervReten[Y][i][j][l]:
-            #     z.QrunI[l] = (z.Water[Y][i][j] - 0.2 * z.CNumImpervReten[Y][i][j][l]) ** 2 / (z.Water[Y][i][j] + 0.8 * z.CNumImpervReten[Y][i][j][l])
+            if z.Water[Y][i][j] >= 0.2 * z.CNumImpervReten:
+                z.QrunI[l] = (z.Water[Y][i][j] - 0.2 * z.CNumImpervReten) ** 2 / (z.Water[Y][i][j] + 0.8 * z.CNumImpervReten)
+                z.QrunIStorage[Y][i][j][l] = z.QrunI[l]
+        if z.CNP[1][l] > 0:
+            if z.MeltPest[Y][i][j] <= 0:
+                if z.Grow_Factor[i] > 0:
+                    # Growing season
+                    if z.AMC5_isolate[Y][i][j] >= 5.33:
+                        z.CNumPerv = z.CNP[2][l]
+                        z.CNumPervStorage[Y][i][j][l] = z.CNumPerv
+                    elif z.AMC5_isolate[Y][i][j] < 3.56:
+                        z.CNumPerv = z.CNP[0][l] + (z.CNP[1][l] - z.CNP[0][l]) * z.AMC5_isolate[Y][i][j] / 3.56
+                        z.CNumPervStorage[Y][i][j][l] = z.CNumPerv
+                    else:
+                        z.CNumPerv = z.CNP[1][l] + (z.CNP[2][l] - z.CNP[1][l]) * (z.AMC5_isolate[Y][i][j] - 3.56) / 1.77
+                        z.CNumPervStorage[Y][i][j][l] = z.CNumPerv
+                else:
+                    # Dormant season
+                    if z.AMC5_isolate[Y][i][j] >= 2.79:
+                        z.CNumPerv = z.CNP[2][l]
+                        z.CNumPervStorage[Y][i][j][l] = z.CNumPerv
+                    elif z.AMC5_isolate[Y][i][j] < 1.27:
+                        z.CNumPerv = z.CNP[0][l] + (z.CNP[1][l] - z.CNP[0][l]) * z.AMC5_isolate[Y][i][j] / 1.27
+                        z.CNumPervStorage[Y][i][j][l] = z.CNumPerv
+                    else:
+                        z.CNumPerv = z.CNP[1][l] + (z.CNP[2][l] - z.CNP[1][l]) * (z.AMC5_isolate[Y][i][j] - 1.27) / 1.52
+                        z.CNumPervStorage[Y][i][j][l] = z.CNumPerv
+            else:
+                z.CNumPerv = z.CNP[2][l]
+                z.CNumPervStorage[Y][i][j][l] = z.CNumPerv
 
-        #if z.CNP[1][l] > 0:
-            # if z.MeltPest[Y][i][j] <= 0:
-            #     if z.Grow_Factor[i] > 0:
-            #         # Growing season
-            #         if z.AMC5[Y][i][j] >= 5.33:
-            #             z.CNumPerv = z.CNP[2][l]
-            #         elif z.AMC5[Y][i][j] < 3.56:
-            #             z.CNumPerv = z.CNP[0][l] + (z.CNP[1][l] - z.CNP[0][l]) * z.AMC5[Y][i][j] / 3.56
-            #         else:
-            #             z.CNumPerv = z.CNP[1][l] + (z.CNP[2][l] - z.CNP[1][l]) * (z.AMC5[Y][i][j] - 3.56) / 1.77
-            #     else:
-            #         # Dormant season
-            #         if z.AMC5[Y][i][j] >= 2.79:
-            #             z.CNumPerv = z.CNP[2][l]
-            #         elif z.AMC5[Y][i][j] < 1.27:
-            #             z.CNumPerv = z.CNP[0][l] + (z.CNP[1][l] - z.CNP[0][l]) * z.AMC5[Y][i][j] / 1.27
-            #         else:
-            #             z.CNumPerv = z.CNP[1][l] + (z.CNP[2][l] - z.CNP[1][l]) * (z.AMC5[Y][i][j] - 1.27) / 1.52
-            # else:
-            #     z.CNumPerv = z.CNP[2][l]
+            z.CNumPervReten = 2540 / z.CNumPerv - 25.4
+            z.CNumPervRetenStorage[Y][i][j][l] = z.CNumPervReten
+            if z.CNumPervReten < 0:
+                z.CNumPervReten = 0
+                z.CNumPervRetenStorage[Y][i][j][l] = z.CNumPervReten
 
-            # z.CNumPervReten = 2540 / z.CNumPerv[Y][i][j][l] - 25.4
-            # if z.CNumPervReten < 0:
-            #     z.CNumPervReten = 0
-
-            # if z.Water[Y][i][j] >= 0.2 * z.CNumPervReten[Y][i][j][l]:
-            #     z.QrunP[l] = (z.Water[Y][i][j] - 0.2 * z.CNumPervReten[Y][i][j][l]) ** 2 / (z.Water[Y][i][j] + 0.8 * z.CNumPervReten[Y][i][j][l])
-
+            if z.Water[Y][i][j] >= 0.2 * z.CNumPervReten:
+                z.QrunP[l] = (z.Water[Y][i][j] - 0.2 * z.CNumPervReten) ** 2 / (z.Water[Y][i][j] + 0.8 * z.CNumPervReten)
+                z.QrunPStorage[Y][i][j][l] = z.QrunP[l]
         lu = l - z.NRur
 
-        if z.UrbAreaTotal > 0:
-            z.UrbanQTotal += ((z.QrunI[Y][i][j][l] * (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))
-                              + z.QrunP[Y][i][j][l] * (1 - (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))))
-                              * z.Area[l] / z.UrbAreaTotal)
+         # if z.UrbAreaTotal > 0:
+         #     z.UrbanQTotal += ((z.QrunI[l] * (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))
+         #                       + z.QrunP[l] * (1 - (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))))
+         #                       * z.Area[l] / z.UrbAreaTotal)
 
         if z.AreaTotal > 0:
-            z.UncontrolledQ += ((z.QrunI[Y][i][j][l] * (z.Imper[l] * (1 - z.ISRR[lu]) *
-                                (1 - z.ISRA[lu])) + z.QrunP[Y][i][j][l] * (1 - (z.Imper[l] *
+            z.UncontrolledQ += ((z.QrunI[l] * (z.Imper[l] * (1 - z.ISRR[lu]) *
+                                (1 - z.ISRA[lu])) + z.QrunP[l] * (1 - (z.Imper[l] *
                                 (1 - z.ISRR[lu]) * (1 - z.ISRA[lu])))) *
                                 z.Area[l] / z.AreaTotal)
 
-        z.WashImperv[l] = (1 - math.exp(-1.81 * z.QrunI[Y][i][j][l])) * z.ImpervAccum[l]
+        z.WashImperv[l] = (1 - math.exp(-1.81 * z.QrunI[l])) * z.ImpervAccum[l]
         z.ImpervAccum[l] -= z.WashImperv[l]
 
-        z.WashPerv[l] = (1 - math.exp(-1.81 * z.QrunP[Y][i][j][l])) * z.PervAccum[l]
+        z.WashPerv[l] = (1 - math.exp(-1.81 * z.QrunP[l])) * z.PervAccum[l]
         z.PervAccum[l] -= z.WashPerv[l]
 
-        z.UrbQRunoff[l][i] += (z.QrunI[Y][i][j][l] * (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))
-                               + z.QrunP[Y][i][j][l] * (1 - (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))))
+        z.UrbQRunoff[l][i] += (z.QrunI[l] * (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))
+                               + z.QrunP[l] * (1 - (z.Imper[l] * (1 - z.ISRR[lu]) * (1 - z.ISRA[lu]))))
 
-    z.AdjUrbanQTotal = z.UrbanQTotal
+    z.AdjUrbanQTotal = z.UrbanQTotal_1[Y][i][j]
 
     # Runoff retention
     if z.Qretention > 0:
-        if z.UrbanQTotal > 0:
-            if z.UrbanQTotal <= z.Qretention * z.PctAreaInfil:
+        if z.UrbanQTotal_1[Y][i][j] > 0:
+            if z.UrbanQTotal_1[Y][i][j] <= z.Qretention * z.PctAreaInfil:
                 z.RetentionEff = 1
                 z.AdjUrbanQTotal = 0
             else:
-                z.RetentionEff = z.Qretention * z.PctAreaInfil / z.UrbanQTotal
+                z.RetentionEff = z.Qretention * z.PctAreaInfil / z.UrbanQTotal_1[Y][i][j]
                 z.AdjUrbanQTotal -= z.Qretention * z.PctAreaInfil
 
     BasinWater(z, i, Y, j)
@@ -333,10 +353,10 @@ def BasinWater(z, i, Y, j):
     # else:
     #     z.RuralQTotal = 0
 
-    if z.UrbAreaTotal > 0:
-        z.UrbanQTotal *= z.UrbAreaTotal / z.AreaTotal
-    else:
-        z.UrbanQTotal = 0
+    # if z.UrbAreaTotal > 0:
+    #     z.UrbanQTotal *= z.UrbAreaTotal / z.AreaTotal
+    # else:
+    #     z.UrbanQTotal = 0
 
     if z.UrbAreaTotal > 0:
         z.AdjUrbanQTotal *= z.UrbAreaTotal / z.AreaTotal
@@ -348,7 +368,7 @@ def BasinWater(z, i, Y, j):
     # else:
     #     z.AgQTotal = 0
 
-    z.QTotal = z.UrbanQTotal + z.RuralQTotal[Y][i][j]
+    z.QTotal = z.urbanQTotal_2[Y][i][j] + z.RuralQTotal[Y][i][j]
     # Assume 20% reduction of runoff with urban wetlands
     z.AdjQTotal = (z.AdjUrbanQTotal * (1 - (z.n25b * 0.2))) + z.RuralQTotal[Y][i][j]
 
@@ -361,7 +381,7 @@ def BasinWater(z, i, Y, j):
         z.Runoff[Y][i] += z.QTotal
 
     z.RuralRunoff[Y][i] += z.RuralQTotal[Y][i][j]
-    z.UrbanRunoff[Y][i] += z.UrbanQTotal
+    z.UrbanRunoff[Y][i] += z.urbanQTotal_2[Y][i][j]
     # TODO: (Are z.AgRunoff and z.AgQTotal actually in cm?)
     #z.AgRunoff[Y][i] += z.AgQTotal[Y][i][j]
 

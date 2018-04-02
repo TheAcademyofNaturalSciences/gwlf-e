@@ -334,7 +334,7 @@ class GmsReader(object):
         z.DayLuSed = np.zeros((16, z.DimYrs, 12, 31))
         z.DayRunoff = np.zeros((z.DimYrs, 12, 31))
         z.DayLuRunoff = np.zeros((16, z.DimYrs, 12, 31))
-        #z.MeltPest = np.zeros((z.DimYrs, 12, 31))
+        z.MeltPest = np.zeros((z.DimYrs, 12, 31))
         z.PrecPest = np.zeros((z.DimYrs, 12, 31))
         z.DailyGrFlow = np.zeros((z.DimYrs, 12, 31))
         z.DailyETCm = np.zeros((z.DimYrs, 12, 31))
@@ -513,6 +513,7 @@ class GmsReader(object):
         z.TotSusSolids = np.zeros(z.NLU)
 
         z.CNI = np.zeros((3, z.NLU))
+        z.CNIStorage = np.zeros((3, z.NLU))
         z.CNP = np.zeros((3, z.NLU))
         # z.NewCN = np.zeros((3, z.NLU))
 
@@ -521,6 +522,7 @@ class GmsReader(object):
             z.Area[i] = self.next(float)  # Area (Ha)
             z.Imper[i] = self.next(float)  # Impervious Surface %
             z.CNI[1][i] = self.next(float)  # Curve Number(Impervious Surfaces)
+            z.CNIStorage[1][i] = z.CNI[1][i]
             z.CNP[1][i] = self.next(float)  # Curve Number(Pervious Surfaces)
             z.TotSusSolids[i] = self.next(float)  # Total Suspended Solids Factor
             self.next(EOL)

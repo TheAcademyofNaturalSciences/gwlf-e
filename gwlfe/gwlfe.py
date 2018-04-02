@@ -58,6 +58,7 @@ import AgRunoff
 import TileDrainRO
 import QrunP
 import QrunI
+import UrbanQTotal
 log = logging.getLogger(__name__)
 
 
@@ -92,8 +93,8 @@ def run(z):
 
     z.Grow_Factor = Grow_Factor.Grow_Factor(z.NYrs, z.DaysMonth, z.Grow)
 
-    #z.InitialSnow = z.InitSnow
-    z.InitSnow,z.MeltPest = InitSnow.InitSnow(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow)
+    z.InitSnow = z.InitialSnow
+    z.InitSnow_isolate,z.MeltPest_isolate = InitSnow.InitSnow(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow)
 
     z.PondPhosLoad = PondPhosLoad.PondPhosLoad(z.NYrs, z.DaysMonth, z.NumPondSys, z.PhosSepticLoad, z.PhosPlantUptake
                                                , z.Grow)
@@ -125,9 +126,10 @@ def run(z):
 
     z.Water = Water.Water(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow)
 
-    z.Rain = Rain.Rain(z.NYrs, z.DaysMonth, z.Temp, z.Prec)
+    z.Rain_isolate = Rain.Rain(z.NYrs, z.DaysMonth, z.Temp, z.Prec)
 
-    z.AMC5= AMC5.AMC5(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist)
+    z.AntMoist0 = z.AntMoist
+    z.AMC5_isolate= AMC5.AMC5(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist0)
 
     #z.NLU = NLU.NLU(z.NRur, z.NUrb)
 
@@ -137,11 +139,11 @@ def run(z):
 
     z.Retention = Retention.Retention(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NLU, z.Grow)
 
-    z.CNI = CNI.CNI(z.NRur, z.NLU, z.CNI)
+    # z.CNI_isolate = CNI.CNI(z.NRur, z.NLU, z.CNI)
+    #
+    # z.CNP_isolate = CNP.CNP(z.NRur, z.NLU, z.CNP)
 
-    z.CNP = CNP.CNP(z.NRur, z.NLU, z.CNP)
-
-    z.CNumPerv = CNumPerv.CNumPerv(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CNP, z.NRur, z.NLU, z.Grow)
+    z.CNumPerv_isolate = CNumPerv.CNumPerv(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CNP, z.NRur, z.NLU, z.Grow)
 
     z.Qrun = Qrun.Qrun(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NLU, z.Grow)
 
@@ -152,11 +154,13 @@ def run(z):
 
     z.RuralQTotal = RuralQTotal.RuralQTotal(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NLU, z.Grow, z.RurAreaTotal, z.Area, z.AreaTotal)
 
-    z.CNumImperv = CNumImperv.CNumImperv(z.NYrs, z.DaysMonth, z.NRur, z.NLU, z.CNI, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.Grow)
+    z.CNumImperv_isolate = CNumImperv.CNumImperv(z.NYrs, z.DaysMonth, z.NRur, z.NLU, z.CNI, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.Grow)
 
-    z.CNumPervReten = CNumPervReten.CNumPervReten(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNP, z.Grow)
+    #z.CNumImperv_isolate = CNumPerv.CNumPerv(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CNI, z.NRur, z.NLU, z.Grow)
 
-    z.CNumImpervReten = CNumImpervReten.CNumImpervReten(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNI, z.Grow)
+    z.CNumPervReten_isolate = CNumPervReten.CNumPervReten(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNP, z.Grow)
+
+    z.CNumImpervReten_isolate = CNumImpervReten.CNumImpervReten(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNI, z.Grow)
 
     z.AgRunoff = AgRunoff.AgRunoff(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur, z.NLU,
                                    z.Grow, z.Landuse, z.Area)
@@ -164,10 +168,22 @@ def run(z):
     z.TileDrainRO = TileDrainRO.TileDrainRO(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.CN, z.NRur,
                                            z.NLU, z.Grow, z.Landuse, z.Area, z.TileDrainDensity)
 
-    z.QrunP = QrunP.QrunP(z.NYrs, z.DaysMonth ,z. Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNP, z.Grow)
+    z.QrunP_isolate = QrunP.QrunP(z.NYrs, z.DaysMonth ,z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNP, z.Grow)
 
-    z.QrunI = QrunI.QrunI(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNI, z.Grow)
+    z.QrunI_isolate = QrunI.QrunI(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist, z.NRur, z.NLU, z.CNI, z.Grow)
 
+    z.UrbanQTotal_1, z.urbanQTotal_2 = UrbanQTotal.UrbanQTotal(z.NYrs, z.DaysMonth, z.Temp, z.Prec, z.InitialSnow, z.AntMoist,
+                                                   z.NRur, z.NLU, z.CNI,
+                                                   z.CNP, z.Grow, z.Imper, z.ISRA, z.ISRR, z.Area, z.UrbAreaTotal, z.AreaTotal)
+
+    z.QrunPStorage= np.zeros((z.NYrs, 12, 31 , z.NLU))
+    z.QrunIStorage = np.zeros((z.NYrs, 12, 31, z.NLU))
+    z.CNumImpervRetenStorage = np.zeros((z.NYrs, 12, 31, z.NLU))
+    z.CNumImpervStorage = np.zeros((z.NYrs, 12, 31, z.NLU))
+    z.AMC5Storage = np.zeros((z.NYrs, 12, 31))
+    z.CNumPervStorage = np.zeros((z.NYrs, 12, 31, z.NLU))
+    z.CNumPervRetenStorage = np.zeros((z.NYrs, 12, 31, z.NLU))
+    z.Rain = np.zeros((z.NYrs, 12, 31))
     for Y in range(z.NYrs):
         # Initialize monthly septic system variables
         z.MonthPondNitr = np.zeros(12)
@@ -195,15 +211,15 @@ def run(z):
                 # ***** BEGIN WEATHER DATA ANALYSIS *****
                 z.DailyTemp = z.Temp[Y][i][j]
                 z.DailyPrec = z.Prec[Y][i][j]
-                #z.Melt = 0
+                z.Melt = 0
                 #z.Rain = 0
-                #z.Water = 0
+                # z.Water = 0
                 z.Erosiv = 0
                 z.ET = 0
                 z.QTotal = 0
                 # z.AgQTotal = 0
                 # z.RuralQTotal = 0
-                z.UrbanQTotal = 0
+                # z.UrbanQTotal = 0
 
                 # Question: Are these values supposed to accumulate for each
                 # day, each month, and each year? Or should these be
@@ -221,30 +237,30 @@ def run(z):
 
                 # RAIN , SNOWMELT, EVAPOTRANSPIRATION (ET)
                 if z.DailyTemp <= 0:
-                    #z.InitSnow = z.InitSnow + z.DailyPrec
-                    pass
+                    z.InitSnow = z.InitSnow + z.DailyPrec
                 else:
-                    # z.Rain = z.DailyPrec
-                    # if z.InitSnow > 0.001:
+                    z.Rain[Y][i][j] = z.DailyPrec
+                    if z.InitSnow > 0.001:
                     #     # A DEGREE-DAY INITSNOW MELT, BUT NO MORE THAN EXISTED
                     #     # INITSNOW
-                    #     z.Melt = 0.45 * z.DailyTemp
-                    #     z.MeltPest[Y][i][j] = z.Melt
-                    #     if z.Melt > z.InitSnow[Y][i][j]:
-                    #         #z.Melt = z.InitSnow[Y][i][j]
-                    #         #z.MeltPest[Y][i][j] = z.InitSnow
-                    #         pass
-                    #     #z.InitSnow = z.InitSnow - z.Melt
-                    #     pass
-                    # else:
-                    #     z.MeltPest[Y][i][j] = 0
+                         z.Melt = 0.45 * z.DailyTemp
+                         z.MeltPest[Y][i][j] = z.Melt
+                         if z.Melt > z.InitSnow:
+                             z.Melt = z.InitSnow
+                             z.MeltPest[Y][i][j] = z.InitSnow
+
+                         z.InitSnow = z.InitSnow - z.Melt
+
+                    else:
+                        z.Melt = 0
+                        z.MeltPest[Y][i][j] = 0
 
                     # AVAILABLE WATER CALCULATION
                     # z.Water = z.Rain[Y][i][j] + z.MeltPest[Y][i][j]
                     z.DailyWater[Y][i][j] = z.Water[Y][i][j]
 
                     # Compute erosivity when erosion occurs, i.e., with rain and no InitSnow left
-                    if z.Rain[Y][i][j] > 0 and z.InitSnow[Y][i][j] < 0.001:
+                    if z.Rain[Y][i][j] > 0 and z.InitSnow < 0.001:
                         z.Erosiv = 6.46 * z.Acoef[i] * z.Rain[Y][i][j] ** 1.81
 
                     # IF WATER AVAILABLE, THEN CALL SUB TO COMPUTE CN, RUNOFF,
@@ -257,15 +273,16 @@ def run(z):
 
                 # UPDATE ANTECEDENT RAIN+MELT CONDITION
                 # Subtract AMC5 by the sum of AntMoist (day 5) and Water
-                #z.AMC5 = z.AMC5 - z.AntMoist[4] + z.Water[Y][i][j]
-                z.DailyAMC5[Y][i][j] = z.AMC5[Y][i][j]
+                z.AMC5Storage[Y][i][j] = z.AMC5
+                z.AMC5 = z.AMC5 - z.AntMoist[4] + z.Water[Y][i][j]
+                #z.DailyAMC5[Y][i][j] = z.AMC5[Y][i][j]
 
                 # Shift AntMoist values to the right.
-                # z.AntMoist[4] = z.AntMoist[3]
-                # z.AntMoist[3] = z.AntMoist[2]
-                # z.AntMoist[2] = z.AntMoist[1]
-                # z.AntMoist[1] = z.AntMoist[0]
-                # z.AntMoist[0] = z.Water[Y][i][j]
+                z.AntMoist[4] = z.AntMoist[3]
+                z.AntMoist[3] = z.AntMoist[2]
+                z.AntMoist[2] = z.AntMoist[1]
+                z.AntMoist[1] = z.AntMoist[0]
+                z.AntMoist[0] = z.Water[Y][i][j]
 
                 # CALCULATE ET FROM SATURATED VAPOR PRESSURE,
                 # HAMON (1961) METHOD
@@ -348,7 +365,7 @@ def run(z):
                                  #(z.PhosSepticLoad - z.PhosPlantUptake * z.Grow_Factor[i]))
 
                 # UPDATE MASS BALANCE ON PONDED EFFLUENT
-                if z.Temp[Y][i][j] <= 0 or z.InitSnow[Y][i][j] > 0:
+                if z.Temp[Y][i][j] <= 0 or z.InitSnow > 0:
 
                     # ALL INPUTS GO TO FROZEN STORAGE
                     z.FrozenPondNitr = z.FrozenPondNitr + z.PondNitrLoad
@@ -449,4 +466,4 @@ def run(z):
     output = WriteOutputFiles.WriteOutput(z)
     # WriteOutputFiles.WriteOutputSumFiles()
 
-    return output
+    return output, z

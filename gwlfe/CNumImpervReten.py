@@ -5,10 +5,10 @@ import CNI
 import CNumImperv
 
 
-def CNumImpervReten(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NLU, Cni, Grow):
+def CNumImpervReten(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NLU, cni, Grow):
     #nlu = NLU.NLU(NRur, NUrb)
-    cni = CNI.CNI(NRur, NLU, Cni)
-    cnumimperv = CNumImperv.CNumImperv(NYrs, DaysMonth, NRur, NLU, Cni, Temp, Prec, InitialSnow, AntMoist, Grow)
+    #cni = CNI.CNI(NRur, NLU, Cni)
+    cnumimperv = CNumImperv.CNumImperv(NYrs, DaysMonth, NRur, NLU, cni, Temp, Prec, InitialSnow, AntMoist, Grow)
     result = np.zeros((NYrs, 12, 31, NLU))
     for Y in range(NYrs):
         for i in range(12):

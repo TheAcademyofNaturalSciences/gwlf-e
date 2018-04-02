@@ -5,10 +5,10 @@ import Water
 import CNumPervReten
 
 
-def QrunP(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NLU, Cnp, Grow):
-    cnp = CNP.CNP(NRur, NLU, Cnp)
+def QrunP(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NLU, cnp, Grow):
+    #cnp = CNP.CNP(NRur, NLU, Cnp)
     water = Water.Water(NYrs, DaysMonth, Temp, Prec, InitialSnow)
-    cnumpervreten = CNumPervReten.CNumPervReten(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NLU, Cnp, Grow)
+    cnumpervreten = CNumPervReten.CNumPervReten(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NLU, cnp, Grow)
     result = np.zeros((NYrs, 12, 31, NLU))
     for Y in range(NYrs):
         for i in range(12):

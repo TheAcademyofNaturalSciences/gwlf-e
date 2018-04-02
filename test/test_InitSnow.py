@@ -3,7 +3,7 @@ from unittest import skip
 from mock import patch
 import numpy as np
 from gwlfe import Parser
-from gwlfe import InitSnow
+from gwlfe import InitSnow, gwlfe
 
 
 class TestInitSnow(unittest.TestCase):
@@ -14,6 +14,15 @@ class TestInitSnow(unittest.TestCase):
 
     def test_InitSnow(self):
         z = self.z
+        _, z = gwlfe.run(z)
         np.testing.assert_array_almost_equal(
-            InitSnow.InitSnow_2(),
-            InitSnow.InitSnow(), decimal=7)
+            z.MeltPest_isolate,
+            z.MeltPest, decimal=7)
+
+
+    #
+    # def test_InitSnow2(self):
+    #     z = self.z
+    #     np.testing.assert_array_almost_equal(
+    #         InitSnow.InitSnow_2(),
+    #         InitSnow.InitSnow(), decimal=7)
