@@ -2,19 +2,21 @@ import numpy as np
 from Timer import time_function
 import QrunI
 import QrunP
+from NLU import NLU
 
-def UrbanQTotal(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NLU, cni, cnp, Grow, Imper, ISRA, ISRR, Area, UrbAreaTotal, AreaTotal):
+def UrbanQTotal(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NUrb, cni, cnp, Grow, Imper, ISRA, ISRR, Area, UrbAreaTotal, AreaTotal):
     result_1 = np.zeros((NYrs,12,31))
     result_2 = np.zeros((NYrs,12,31))
-    qruni = QrunI.QrunI(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NLU, cni, Grow)
-    qrunp = QrunP.QrunP(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NLU, cnp, Grow)
+    qruni = QrunI.QrunI(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NUrb, cni, Grow)
+    qrunp = QrunP.QrunP(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist, NRur, NUrb, cnp, Grow)
+    nlu = NLU(NRur,NUrb)
 
     for Y in range(NYrs):
         for i in range(12):
             for j in range(DaysMonth[Y][i]):
                 result_1[Y][i][j] = 0
                 result_2[Y][i][j] = 0
-                for l in range(NRur, NLU):
+                for l in range(NRur, nlu):
                     lu = l - NRur
                     if UrbAreaTotal > 0:
                         result_1[Y][i][j] += ((qruni[Y][i][j][l] * (Imper[l] * (1 - ISRR[lu]) * (1 - ISRA[lu]))

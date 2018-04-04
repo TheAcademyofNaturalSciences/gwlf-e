@@ -11,6 +11,7 @@ class TestQrunI(unittest.TestCase):
         input_file = open('input_4.gms', 'r')
         self.z = Parser.GmsReader(input_file).read()
 
+
     def test_QrunI(self):
         z = self.z
         _, z = gwlfe.run(z)

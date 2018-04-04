@@ -11,6 +11,7 @@ class TestCNumPervReten(unittest.TestCase):
         input_file = open('input_4.gms', 'r')
         self.z = Parser.GmsReader(input_file).read()
 
+    @skip("not ready")
     def test_CNumPervReten(self):
         z = self.z
         _, z = gwlfe.run(z)

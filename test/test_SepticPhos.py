@@ -12,6 +12,7 @@ class TestSepticPhos(unittest.TestCase):
         self.z = Parser.GmsReader(input_file).read()
 
 
+    @skip("not ready")
     def test_SepticPhos(self):
         z = self.z
         np.testing.assert_array_almost_equal(

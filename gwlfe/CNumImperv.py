@@ -5,19 +5,21 @@ import CNI
 import InitSnow
 import Grow_Factor
 import AMC5
+from NLU import NLU
 
 
-def CNumImperv(NYrs, DaysMonth, NRur, NLU, cni, Temp, Prec, InitialSnow, AntMoist_initial, Grow):
-    #cni = CNI.CNI(NRur, NLU, Cni)
-    #nlu = NLU.NLU(NRur, NUrb)
+def CNumImperv(NYrs, DaysMonth, NRur, NUrb, cni, Temp, Prec, InitialSnow, AntMoist_initial, Grow):
+    nlu = NLU(NRur, NUrb)
+    # cni = CNI.CNI(NRur, nlu, _cni)
     _,meltpest = InitSnow.InitSnow(NYrs, DaysMonth, Temp, Prec, InitialSnow)
     grow_factor = Grow_Factor.Grow_Factor(NYrs, DaysMonth, Grow)
     amc5 = AMC5.AMC5(NYrs, DaysMonth, Temp, Prec, InitialSnow, AntMoist_initial)
-    result = np.zeros((NYrs, 12, 31, NLU))
+
+    result = np.zeros((NYrs, 12, 31, nlu))
     for Y in range(NYrs):
         for i in range(12):
             for j in range(DaysMonth[Y][i]):
-                for l in range(NRur, NLU):
+                for l in range(NRur, nlu):
                     if cni[1][l] > 0:
                         if meltpest[Y][i][j] <= 0:
                             if grow_factor[i] > 0:
