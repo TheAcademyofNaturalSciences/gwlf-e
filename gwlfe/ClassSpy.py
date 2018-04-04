@@ -245,6 +245,33 @@ def variables_connected_to_output():
     print("Variables used in output: " + str(len(variables_connected)) + " (out of " + str(len(variables)) + ")")
     variable_graph(list(variables_connected))
 
+def variables_connected_to_calc_cn():
+    graph = nx.DiGraph()
+    variable_edges = pd.read_csv("connections.csv")
+
+    complete_edges = variable_edges[variable_edges['Variable_set'].notnull() & variable_edges['Variable_get'].notnull()]
+    for index, row in complete_edges.iterrows():
+        graph.add_edge(row[4], row[0])
+
+    reversed = nx.reverse(graph)
+
+    # get all the outputs
+    variables = pd.read_csv("variables.csv")
+    variables_cal_cn = set()
+    for index, row in complete_edges[complete_edges["File"] == "CalcCnErosRunoffSed.py"].iterrows():
+        for descendant in list(nx.descendants(reversed, row[0])):
+            variables_cal_cn.add(descendant)
+
+    variables_connected = set()
+    for index, row in variables[variables["Shape"] == "septagon"].iterrows():
+        for descendant in list(nx.descendants(reversed, row[0])):
+            variables_connected.add(descendant)
+
+    variables_cal_cn = intersection(variables_connected,variables_cal_cn)
+
+    print("Variables used in output: " + str(len(variables_cal_cn)) + " (out of " + str(len(variables)) + ")")
+    variable_graph(list(variables_cal_cn))
+
 
 def variable_graph(variable_subset=None):
     dot = Digraph(comment='The Round Table', strict=True, engine="dot")
@@ -303,4 +330,5 @@ if __name__ == "__main__":
     # variable_graph()
     # variable_connected_to_output("MeanFlow")
     # variables_connected_to_output()
-    output_intersection()
+    # output_intersection()
+    variables_connected_to_calc_cn()
