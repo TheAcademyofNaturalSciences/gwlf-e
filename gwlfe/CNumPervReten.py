@@ -2,7 +2,7 @@ import numpy as np
 from Timer import time_function
 from CNP import CNP, CNP_2
 from CNumPerv import CNumPerv, CNumPerv_2
-from NLU import NLU
+from NLU_function import NLU_function
 from Water import Water, Water_2
 from Memoization import memoize
 
@@ -11,7 +11,7 @@ from Memoization import memoize
 def CNumPervReten(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur, NUrb, CNP_0, Grow_0):
     cnp = CNP(NRur, NUrb, CNP_0)
     c_num_perv = CNumPerv(NYrs, DaysMonth, Temp, NRur, NUrb, CNP_0, InitSnow_0, Prec, Grow_0, AntMoist_0)
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     result = np.zeros((NYrs, 12, 31, nlu))
     for Y in range(NYrs):
@@ -30,7 +30,7 @@ def CNumPervReten(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur, NUr
 
 
 def CNumPervReten_2(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur, NUrb, CNP_0, Grow_0):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, 12, 31, nlu))
     c_num_perv = CNumPerv_2(NYrs, DaysMonth, Temp, NRur, NUrb, CNP_0, InitSnow_0, Prec, Grow_0, AntMoist_0)
     cnp = CNP_2(NRur, NUrb, CNP_0)

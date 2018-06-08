@@ -1,7 +1,7 @@
 import numpy as np
 from Timer import time_function
 from Memoization import memoize
-from NLU import NLU
+from NLU_function import NLU_function
 from LuLoad import LuLoad
 from LuLoad import LuLoad_2
 

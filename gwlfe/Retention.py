@@ -1,6 +1,6 @@
 import numpy as np
 from Timer import time_function
-from NLU import NLU
+from NLU_function import NLU_function
 from CNum import CNum, CNum_2
 from Water import Water, Water_2
 from Memoization import memoize
@@ -8,7 +8,7 @@ from Memoization import memoize
 
 @memoize
 def Retention(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur, NUrb, CN, Grow_0):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, 12, 31, nlu)) # Why nlu ?
     c_num = CNum(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, CN, NRur, NUrb, Grow_0)
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
@@ -25,7 +25,7 @@ def Retention(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur, NUrb, C
 
 @memoize
 def Retention_2(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur, NUrb, CN, Grow_0):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, 12, 31, nlu))
     c_num = CNum_2(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, CN, NRur, NUrb, Grow_0)
     cnrur = np.tile(CN[:NRur][None, None, None, :], (NYrs, 12, 31, 1))

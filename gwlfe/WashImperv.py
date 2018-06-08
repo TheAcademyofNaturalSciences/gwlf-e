@@ -2,7 +2,7 @@ import numpy as np
 from Timer import time_function
 import math
 from Memoization import memoize
-from NLU import NLU
+from NLU_function import NLU_function
 from Water import Water
 from Water import Water_2
 from QrunI import QrunI
@@ -19,7 +19,7 @@ def WashImperv(NYrs, DaysMonth, InitSnow_0, Temp, Prec, CNI_0, AntMoist_0, Grow_
     result = np.zeros((NYrs, 12, 31, 16))
     impervaccum = np.zeros(16)
     carryover = np.zeros(16)
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     qruni = QrunI(NYrs, DaysMonth, NRur, NUrb, Temp, InitSnow_0, Prec, CNI_0, AntMoist_0, Grow_0)
     for Y in range(NYrs):
@@ -43,7 +43,7 @@ def WashImperv(NYrs, DaysMonth, InitSnow_0, Temp, Prec, CNI_0, AntMoist_0, Grow_
 
 @memoize
 def WashImperv_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec, CNI_0, AntMoist_0, Grow_0, NRur, NUrb):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     water = Water_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     qruni = QrunI_2(NYrs, DaysMonth, NRur, NUrb, Temp, InitSnow_0, Prec, CNI_0, AntMoist_0, Grow_0)
     return WashImperv_inner(NYrs, DaysMonth, Temp, NRur, nlu, water, qruni)

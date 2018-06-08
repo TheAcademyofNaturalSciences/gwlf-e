@@ -3,7 +3,7 @@ from Timer import time_function
 from Memoization import memoize
 from Water import Water
 from Water import Water_2
-from NLU import NLU
+from NLU_function import NLU_function
 from AdjUrbanQTotal_1 import AdjUrbanQTotal_1
 from AdjUrbanQTotal_1 import AdjUrbanQTotal_1_2
 from DisSurfLoad import DisSurfLoad
@@ -16,7 +16,7 @@ def NetDisLoad(NYrs, DaysMonth, Temp, InitSnow_0, Prec, NRur, NUrb, Area, CNI_0,
                LoadRatePerv, Storm, UrbBMPRed, DisFract, FilterWidth, PctStrmBuf):
     result = np.zeros((NYrs, 12, 31, Nqual))
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     adjurbanqtotal_1 = AdjUrbanQTotal_1(NYrs, DaysMonth, Temp, InitSnow_0, Prec, NRur, NUrb, Area, CNI_0, AntMoist_0,
                                         Grow_0, CNP_0, Imper, ISRR, ISRA, Qretention, PctAreaInfil)
     dissurfaceload = DisSurfLoad(NYrs, DaysMonth, InitSnow_0, Temp, Prec, Nqual, NRur, NUrb, Area, CNI_0, AntMoist_0,

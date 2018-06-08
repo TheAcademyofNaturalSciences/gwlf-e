@@ -2,7 +2,7 @@ import numpy as np
 from Timer import time_function
 from Memoization import memoize
 from Water import Water
-from NLU import NLU
+from NLU_function import NLU_function
 from AreaTotal import AreaTotal
 from QrunI import QrunI
 from QrunP import QrunP

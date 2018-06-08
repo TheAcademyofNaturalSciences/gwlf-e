@@ -5,7 +5,7 @@ from Water import Water
 from Water import Water_2
 from AdjUrbanQTotal_1 import AdjUrbanQTotal_1
 from AdjUrbanQTotal_1 import AdjUrbanQTotal_1_2
-from NLU import NLU
+from NLU_function import NLU_function
 from WashImperv import WashImperv
 from WashImperv import WashImperv_2
 from WashPerv import WashPerv
@@ -23,7 +23,7 @@ def SurfaceLoad(NYrs, DaysMonth, InitSnow_0, Temp, Prec, NRur, NUrb, Area, CNI_0
     adjurbanqtotal_1 = AdjUrbanQTotal_1(NYrs, DaysMonth, Temp, InitSnow_0, Prec, NRur, NUrb, Area, CNI_0, AntMoist_0,
                                         Grow_0, CNP_0,
                                         Imper, ISRR, ISRA, Qretention, PctAreaInfil)
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     washimperv = WashImperv(NYrs, DaysMonth, InitSnow_0, Temp, Prec, CNI_0, AntMoist_0, Grow_0, NRur, NUrb)
     washperv = WashPerv(NYrs, DaysMonth, InitSnow_0, Temp, Prec, CNP_0, AntMoist_0, Grow_0, NRur, NUrb)
     lu_1 = LU_1(NRur, NUrb)
@@ -63,7 +63,7 @@ def SurfaceLoad(NYrs, DaysMonth, InitSnow_0, Temp, Prec, NRur, NUrb, Area, CNI_0
 def SurfaceLoad_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec, NRur, NUrb, Area, CNI_0, AntMoist_0, Grow_0, CNP_0,
                   Imper, ISRR, ISRA, Qretention, PctAreaInfil, Nqual, LoadRateImp,
                   LoadRatePerv, Storm, UrbBMPRed):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, 12, 31, nlu - NRur, Nqual))
     water = Water_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     adjurbanqtotal_1 = AdjUrbanQTotal_1_2(NYrs, DaysMonth, Temp, InitSnow_0, Prec, NRur, NUrb, Area, CNI_0, AntMoist_0,

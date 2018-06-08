@@ -2,7 +2,7 @@ import numpy as np
 from Timer import time_function
 from CNI import CNI, CNI_2
 from CNumImperv import CNumImperv, CNumImperv_2
-from NLU import NLU
+from NLU_function import NLU_function
 from Water import Water, Water_2
 from Memoization import memoize
 
@@ -12,7 +12,7 @@ def CNumImpervReten(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur, N
                     Grow_0):  # TODO: this is exactly the same as perv and retention
     cni = CNI(NRur, NUrb, CNI_0)
     c_num_imperv = CNumImperv(NYrs, NRur, NUrb, DaysMonth, InitSnow_0, Temp, Prec, CNI_0, Grow_0, AntMoist_0)
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     result = np.zeros((NYrs, 12, 31, nlu))
     for Y in range(NYrs):
@@ -34,7 +34,7 @@ def CNumImpervReten_2(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur,
     cni = CNI_2(NRur, NUrb, CNI_0)
     cni_1 = np.tile(cni[1][None, None, None, :], (NYrs, 12, 31, 1))
     c_num_imperv = CNumImperv_2(NYrs, NRur, NUrb, DaysMonth, InitSnow_0, Temp, Prec, CNI_0, Grow_0, AntMoist_0)
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     water = np.repeat(Water_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec)[:, :, :, None], nlu, axis=3)
     result = np.zeros((NYrs, 12, 31, nlu))
     TempE = np.repeat(Temp[:, :, :, None], nlu, axis=3)

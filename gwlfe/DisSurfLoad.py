@@ -1,7 +1,7 @@
 import numpy as np
 from Timer import time_function
 from Memoization import memoize
-from NLU import NLU
+from NLU_function import NLU_function
 from FilterEff import FilterEff
 from FilterEff import FilterEff_2
 from Water import Water
@@ -20,7 +20,7 @@ def DisSurfLoad(NYrs, DaysMonth, InitSnow_0, Temp, Prec, Nqual, NRur, NUrb, Area
                 UrbBMPRed, DisFract, FilterWidth, PctStrmBuf):
     result = np.zeros((NYrs, 12, 31, 16, Nqual))
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     adjurbanqtotal_1 = AdjUrbanQTotal_1(NYrs, DaysMonth, Temp, InitSnow_0, Prec, NRur, NUrb, Area, CNI_0, AntMoist_0,
                                         Grow_0, CNP_0,
                                         Imper, ISRR, ISRA, Qretention, PctAreaInfil)
@@ -49,7 +49,7 @@ def DisSurfLoad(NYrs, DaysMonth, InitSnow_0, Temp, Prec, Nqual, NRur, NUrb, Area
 def DisSurfLoad_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec, Nqual, NRur, NUrb, Area, CNI_0, AntMoist_0, Grow_0, CNP_0,
                   Imper, ISRR, ISRA, Qretention, PctAreaInfil, LoadRateImp, LoadRatePerv,
                   Storm, UrbBMPRed, DisFract, FilterWidth, PctStrmBuf):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, 12, 31, nlu - NRur, Nqual))
     water = Water_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     adjurbanqtotal_1 = AdjUrbanQTotal_1_2(NYrs, DaysMonth, Temp, InitSnow_0, Prec, NRur, NUrb, Area, CNI_0, AntMoist_0,

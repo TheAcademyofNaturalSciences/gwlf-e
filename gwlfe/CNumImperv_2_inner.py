@@ -1,6 +1,6 @@
 # from numba.pycc import CC
 import numpy as np
-from gwlfe import cc
+from . import cc
 # cc = CC('CNumImperv_2_inner_compiled')
 
 @cc.export('CNumImperv_2_inner',

@@ -20,4 +20,5 @@ __pycache__/
 .eggs
 **.npy
 **.csv
+gwlfe/combined.py
 **.dot

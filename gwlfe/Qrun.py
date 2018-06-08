@@ -2,13 +2,13 @@ import numpy as np
 from Timer import time_function
 from Water import Water, Water_2
 from Retention import Retention, Retention_2
-from NLU import NLU
+from NLU_function import NLU_function
 from Memoization import memoize
 
 
 @memoize
 def Qrun(NYrs, DaysMonth, Temp, InitSnow_0, Prec, NRur, NUrb, CN, AntMoist_0, Grow_0):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, 12, 31, nlu))
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     retention = Retention(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur, NUrb, CN, Grow_0)
@@ -27,7 +27,7 @@ def Qrun(NYrs, DaysMonth, Temp, InitSnow_0, Prec, NRur, NUrb, CN, AntMoist_0, Gr
 
 @memoize
 def Qrun_2(NYrs, DaysMonth, Temp, InitSnow_0, Prec, NRur, NUrb, CN, AntMoist_0, Grow_0):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, 12, 31, nlu))
     water = np.repeat(Water_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec)[:, :, :, None], nlu, axis=3)
     TempE = np.repeat(Temp[:, :, :, None], nlu, axis=3)

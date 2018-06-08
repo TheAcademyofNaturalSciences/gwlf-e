@@ -1,6 +1,6 @@
 # from numba.pycc import CC
 import numpy as np
-from gwlfe import cc
+from . import cc
 # cc = CC('CNum_inner_compiled')
 
 @cc.export('CNum_inner','(int64,int32[:,::1],float64[:,:,::1],float64[::1],int64,float64[:,:,::1],float64[:,::1],float64[:,:,::1],boolean[::1],float64[:,:,::1])')

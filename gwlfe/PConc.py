@@ -1,11 +1,11 @@
 import numpy as np
 from Timer import time_function
 from Memoization import memoize
-from NLU import NLU
+from NLU_function import NLU_function
 
 def PConc(NRur, NUrb, PhosConc, ManPhos, ManuredAreas, FirstManureMonth, LastManureMonth, FirstManureMonth2,
           LastManureMonth2):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((12, nlu))
     for i in range(12):
         for l in range(NRur):
@@ -23,7 +23,7 @@ def PConc_2(NRur, NUrb, PhosConc, ManPhos, ManuredAreas, FirstManureMonth, LastM
     if(FirstManureMonth < 0 and FirstManureMonth2 < 0 and LastManureMonth < 0 and LastManureMonth2 < 0):
         return np.reshape(np.repeat(PhosConc[None,:], repeats=12, axis=0), (12, -1))
     else:
-        nlu = NLU(NRur, NUrb)
+        nlu = NLU_function(NRur, NUrb)
         result = np.reshape(np.repeat(PhosConc, repeats=12, axis=0), (12, nlu))
         result[FirstManureMonth:LastManureMonth, :ManuredAreas] = ManPhos
         result[FirstManureMonth2:LastManureMonth2, :ManuredAreas] = ManPhos

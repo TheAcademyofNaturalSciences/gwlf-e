@@ -2,7 +2,7 @@ import numpy as np
 from Timer import time_function
 import math
 from Memoization import memoize
-from NLU import NLU
+from NLU_function import NLU_function
 from Water import Water
 from Water import Water_2
 from QrunP import QrunP
@@ -18,7 +18,7 @@ except ImportError:
 @memoize
 def WashPerv(NYrs, DaysMonth, InitSnow_0, Temp, Prec, CNP_0, AntMoist_0, Grow_0, NRur, NUrb):
     pervaccum = np.zeros(16)
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     qrunp = QrunP(NYrs, DaysMonth, NRur, NUrb, Temp, InitSnow_0, Prec, CNP_0, AntMoist_0, Grow_0)
     washperv = np.zeros((NYrs, 12, 31, 16))
@@ -44,7 +44,7 @@ def WashPerv(NYrs, DaysMonth, InitSnow_0, Temp, Prec, CNP_0, AntMoist_0, Grow_0,
 
 
 def WashPerv_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec, CNP_0, AntMoist_0, Grow_0, NRur, NUrb):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     water = Water_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     qrunp = QrunP_2(NYrs, DaysMonth, NRur, NUrb, Temp, InitSnow_0, Prec, CNP_0, AntMoist_0, Grow_0)
     # WashPerv_inner(NYrs, DaysMonth, Temp, NRur, nlu, water, qrunp)

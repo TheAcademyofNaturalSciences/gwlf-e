@@ -7,7 +7,7 @@ import logging
 
 import numpy as np
 
-import LoadReductions
+from LoadReductions import AdjustScnLoads
 from enums import YesOrNo, LandUse
 from AvEvapoTrans import AvEvapoTrans
 from AreaTotal import AreaTotal_2
@@ -225,7 +225,7 @@ def WriteOutput(z):
     z.n15 = round(z.AvStreamBankPSum * NPConvert * z.RetentFactorP * (1 - z.AttenP))
 
     # PERFORM LOAD REDUCTIONS BASED ON BMPS IN SCENARIO FILE
-    LoadReductions.AdjustScnLoads(z)
+    AdjustScnLoads(z)
 
     # CONVERT AVERAGE STREAM BANK ERIOSION, N AND P TO ENGLISH UNITS
     z.AvStreamBankErosSum = z.n4
@@ -683,7 +683,7 @@ def WriteOutput(z):
         z.n15 = round((z.StreamBankPSum[y] * NPConvert * z.RetentFactorP * (1 - z.AttenP)))
 
         # PERFORM LOAD REDUCTIONS BASED ON BMPS IN SCENARIO FILE
-        LoadReductions.AdjustScnLoads(z)
+        AdjustScnLoads(z)
 
         # CONVERT AVERAGE STREAM BANK ERIOSION, N AND P TO ENGLISH UNITS
         z.StreamBankErosSum[y] = z.n4

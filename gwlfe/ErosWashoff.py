@@ -1,7 +1,7 @@
 import numpy as np
 from Timer import time_function
 from Memoization import memoize
-from NLU import NLU
+from NLU_function import NLU_function
 from Water import Water
 from RurEros import RurEros
 from RurEros import RurEros_2
@@ -10,7 +10,7 @@ from RurEros import RurEros_2
 @memoize
 def ErosWashoff(NYrs, DaysMonth, InitSnow_0, Temp, Prec, NRur, NUrb, Acoef, KF, LS, C, P, Area):
     result = np.zeros((NYrs, 16, 12))
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     rureros = RurEros(NYrs, DaysMonth, Temp, InitSnow_0, Prec, Acoef, NRur, KF, LS, C, P, Area)
     for Y in range(NYrs):

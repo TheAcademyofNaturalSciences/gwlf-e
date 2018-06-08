@@ -1,6 +1,6 @@
 # from numba.pycc import CC
 import numpy as np
-from gwlfe import cc
+from . import cc
 # cc = CC('Percolation_inner_compiled')
 
 @cc.export('Percolation_inner', '(int64, float64, int32[:,::1], float64, float64[:,:,::1], float64[:,:,::1])')

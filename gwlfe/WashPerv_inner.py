@@ -3,7 +3,7 @@ import math
 # from numba.pycc import CC
 
 # cc = CC('WashPerv_inner_compiled')
-from gwlfe import cc
+from . import cc
 
 @cc.export('WashPerv_inner',
            '(int64, int32[:,::1], float64[:,:,::1], int64, int64, float64[:,:,::1], float64[:,:,:,::1])')

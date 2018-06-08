@@ -1,6 +1,6 @@
 import numpy as np
 from Timer import time_function
-from NLU import NLU
+from NLU_function import NLU_function
 from Water import Water, Water_2
 from CNI import CNI, CNI_2
 from Melt import Melt
@@ -19,7 +19,7 @@ except ImportError:
 
 @memoize
 def CNumImperv(NYrs, NRur, NUrb, DaysMonth, InitSnow_0, Temp, Prec, CNI_0, Grow_0, AntMoist_0):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, 12, 31, nlu))
     cni = CNI(NRur, NUrb, CNI_0)
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
@@ -69,7 +69,7 @@ def CNumImperv(NYrs, NRur, NUrb, DaysMonth, InitSnow_0, Temp, Prec, CNI_0, Grow_
 
 
 def CNumImperv_2(NYrs, NRur, NUrb, DaysMonth, InitSnow_0, Temp, Prec, CNI_0, Grow_0, AntMoist_0):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     cni = CNI_2(NRur, NUrb, CNI_0)
     water = Water_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     melt = Melt_1_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec)

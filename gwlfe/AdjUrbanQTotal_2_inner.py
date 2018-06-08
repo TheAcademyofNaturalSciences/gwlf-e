@@ -2,8 +2,7 @@ import numpy as np
 # from numba.pycc import CC
 
 # cc = CC('AdjUrbanQTotal_2_inner_compiled')
-from gwlfe import cc
-
+from . import cc
 @cc.export('AdjUrbanQTotal_2_inner',
            '(int64, int32[:,::1], float64[:,:,::1], float64, float64, float64[:,:,::1], float64[:,:,::1], float64, float64)')
 def AdjUrbanQTotal_2_inner(NYrs, DaysMonth, Temp, Qretention, PctAreaInfil, water, urban_q_total, urb_area_total,

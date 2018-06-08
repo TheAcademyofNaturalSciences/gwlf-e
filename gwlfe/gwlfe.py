@@ -14,14 +14,16 @@ import logging
 
 import numpy as np
 
+
+
 from .enums import GrowFlag
-import ReadGwlfDataFile
-import PrelimCalculations
-import AFOS_old
-import CalcLoads
-import StreamBank
-import AnnualMeans
-import WriteOutputFiles
+from ReadGwlfDataFile import ReadAllData
+from PrelimCalculations import InitialCalculations
+from AFOS_old import AnimalOperations
+from CalcLoads import CalculateLoads
+from StreamBank import CalculateStreamBankEros
+from AnnualMeans import CalculateAnnualMeanLoads
+from WriteOutputFiles import WriteOutput
 from InitSnow import InitSnow_2
 from GrowFactor import GrowFactor_2
 from TotAreaMeters import TotAreaMeters
@@ -31,15 +33,15 @@ from AvGroundWater import AvGroundWater_2
 from AvRunoff import AvRunoff_2
 from LuTotNitr import LuTotNitr_2
 from LuTotPhos import LuTotPhos_2
+from numba import jit
 
-from numba.pycc import CC
 
-cc = CC("gwlfe_compiled")
 
 log = logging.getLogger(__name__)
 
 
 # @time_function
+# @jit(cache=True,nopython=True)
 def run(z):
     log.debug('Running model...')
 
@@ -49,7 +51,7 @@ def run(z):
 
     # MODEL CALCULATIONS FOR EACH YEAR OF ANALYSIS - WATER BALANCE,
     # NUTRIENTS AND SEDIMENT LOADS
-    ReadGwlfDataFile.ReadAllData(z)
+    ReadAllData(z)
 
     # --------- run the remaining parts of the model ---------------------
 
@@ -66,7 +68,7 @@ def run(z):
                                           z.KF, z.LS, z.C, z.P, z.Acoef, z.SedPhos)
     # CALCLULATE PRELIMINARY INITIALIZATIONS AND VALUES FOR
     # WATER BALANCE AND NUTRIENTS
-    PrelimCalculations.InitialCalculations(z)
+    InitialCalculations(z)
 
     for Y in range(z.NYrs):
         # Initialize monthly septic system variables
@@ -136,16 +138,16 @@ def run(z):
                 z.MonthDischargePhos[i] = z.MonthDischargePhos[i] + z.PhosSepticLoad
 
         # CALCULATE ANIMAL FEEDING OPERATIONS OUTPUT
-        AFOS_old.AnimalOperations(z, Y)
+        AnimalOperations(z, Y)
 
         # CALCULATE NUTRIENT AND SEDIMENT LOADS
-        CalcLoads.CalculateLoads(z, Y)
+        CalculateLoads(z, Y)
 
         # CALCULATE STREAM BANK EROSION
-        StreamBank.CalculateStreamBankEros(z, Y)
+        CalculateStreamBankEros(z, Y)
 
         # CALCULATE FINAL ANNUAL MEAN LOADS
-        AnnualMeans.CalculateAnnualMeanLoads(z, Y)
+        CalculateAnnualMeanLoads(z, Y)
 
     # CALCULATE FINAL MONTHLY AND ANNUAL WATER BALANCE FOR
     # AVERAGE STREAM FLOW
@@ -180,6 +182,6 @@ def run(z):
 
     log.debug("Model run complete for " + str(z.NYrs) + " years of data.")
 
-    output = WriteOutputFiles.WriteOutput(z)
+    output = WriteOutput(z)
     # WriteOutputFiles.WriteOutputSumFiles()
     return output

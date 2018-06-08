@@ -12,7 +12,7 @@ Imported from ReadAllDataFiles.bas
 import logging
 from FlowDays import FlowDays
 from .enums import SweepType, YesOrNo
-from . import PrelimQualCalculations
+from PrelimQualCalculations import ReDimRunQualVars
 
 log = logging.getLogger(__name__)
 
@@ -57,7 +57,7 @@ def ReadAllData(z):
                           z.GrazingNRate, z.Prec, z.DaysMonth)
 
     # If RunQual output is requested, then redim RunQual values
-    PrelimQualCalculations.ReDimRunQualVars()
+    ReDimRunQualVars()
 
     # Set the Total AEU to the value from the Animal Density layer
 

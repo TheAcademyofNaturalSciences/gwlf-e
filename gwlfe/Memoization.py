@@ -1,7 +1,7 @@
 import hashlib
 import numpy as np
-
-
+import uuid
+import json
 # without
 # 300 loops of 'test_test', average time per loop: 0.321625, best: 0.303278, worst: 0.426772
 # 300 loops of 'test_test', average time per loop: 0.006865, best: 0.001217, worst: 0.016353
@@ -59,22 +59,40 @@ def memodict(f):
 
 # def memoize(f):
 #     return f
-
+runid = uuid.uuid4()
+# runids = {}
 def memoize(f):
     class memodict(dict):
         def __init__(self, f):
             self.f = f
             self.result = None
             self.__name__ = f.__name__
-
         def __call__(self, *args):
-            if self.result is None:
-                ret = self.result = self.f(*args)
-                return ret
+            # print(runid == self.runid)
+            if (self.result is None):
+                self.result = self.f(*args)
+                # ret = self.result = self.f(*args)
             return self.result
 
     return memodict(f)
 
+def memoize_runid(f):
+    class memodict(dict):
+        def __init__(self, f):
+            self.f = f
+            self.result = None
+            self.__name__ = f.__name__
+            self.runid = None
+
+        def __call__(self, *args):
+            # print(runid == self.runid)
+            if (self.result is None) or (self.runid != runid):
+                self.runid = uuid.UUID(runid.hex)
+                self.result = self.f(*args)
+                # ret = self.result = self.f(*args)
+            return self.result
+
+    return memodict(f)
 # def memoize(f):
 #     class memodict():
 #         def __init__(self, f):

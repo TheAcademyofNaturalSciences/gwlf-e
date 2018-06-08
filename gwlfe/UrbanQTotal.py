@@ -1,6 +1,6 @@
 import numpy as np
 from Timer import time_function
-from NLU import NLU
+from NLU_function import NLU_function
 from Water import Water
 from UrbAreaTotal import UrbAreaTotal
 from QrunI import QrunI, QrunI_2
@@ -12,7 +12,7 @@ from Memoization import memoize
 @memoize
 def UrbanQTotal(NYrs, DaysMonth, NRur, NUrb, Temp, InitSnow_0, Prec, Area, CNI_0, AntMoist_0, Grow_0, CNP_0, Imper, ISRR,
                 ISRA):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, 12, 31))
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     urb_area_total = UrbAreaTotal(NRur, NUrb, Area)

@@ -1,13 +1,13 @@
 import numpy as np
 from Timer import time_function
-from NLU import NLU
+from NLU_function import NLU_function
 from Memoization import memoize
 
 # @time_function
 @memoize
 def UrbAreaTotal(NRur,NUrb,Area):
     result = 0
-    nlu = NLU(NRur,NUrb)
+    nlu = NLU_function(NRur, NUrb)
     for l in range(NRur, nlu):
         result += Area[l]
     return result
@@ -17,5 +17,5 @@ def UrbAreaTotal(NRur,NUrb,Area):
 # @time_function
 #@memoize
 def UrbAreaTotal_2(NRur,NUrb,Area):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     return np.sum(Area[NRur:])

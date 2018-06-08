@@ -1,12 +1,12 @@
 import numpy as np
 from Timer import time_function
-from NLU import NLU
+from NLU_function import NLU_function
 from Memoization import memoize
 
 
 @memoize
 def CNI(NRur, NUrb, CNI_0):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((3, nlu))
     for l in range(NRur, nlu):
         result[0][l] = CNI_0[1][l] / (2.334 - 0.01334 * CNI_0[1][1])
@@ -16,7 +16,7 @@ def CNI(NRur, NUrb, CNI_0):
 
 # @time_function
 def CNI_2(NRur, NUrb, CNI_0):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((3, nlu))
     result[0] = CNI_0[1] / (2.334 - 0.01334 * CNI_0[1][1])
     result[1] = CNI_0[1]

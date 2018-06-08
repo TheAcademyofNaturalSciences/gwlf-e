@@ -9,7 +9,11 @@ import json
 import logging
 import time
 
-from gwlfe import gwlfe, Parser
+# from gwlfe.gwlfe import run
+# from gwlfe.Parser import GmsReader
+from gwlfe.combined import run
+from gwlfe.combined import GmsReader
+
 
 def main():
     log = logging.getLogger('gwlfe')
@@ -21,9 +25,9 @@ def main():
     gms_filename = sys.argv[1]
 
     fp = open(gms_filename, 'r')
-    z = Parser.GmsReader(fp).read()
+    z = GmsReader(fp).read()
     start = time.time()
-    result = gwlfe.run(z)
+    result = run(z)
     print(time.time()-start)
     print(json.dumps(result, indent=4))
 

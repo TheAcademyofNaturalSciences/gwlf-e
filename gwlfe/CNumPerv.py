@@ -1,7 +1,7 @@
 import numpy as np
 from Timer import time_function
 from DailyArrayConverter import get_value_for_yesterday
-from NLU import NLU
+from NLU_function import NLU_function
 from Water import Water, Water_2
 from CNP import CNP, CNP_2
 from Melt import Melt, Melt_2
@@ -19,7 +19,7 @@ except ImportError:
 
 @memoize
 def CNumPerv(NYrs, DaysMonth, Temp, NRur, NUrb, CNP_0, InitSnow_0, Prec, Grow_0, AntMoist_0):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, 12, 31, nlu))
     cnp = CNP(NRur, NUrb, CNP_0)
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
@@ -69,7 +69,7 @@ def CNumPerv(NYrs, DaysMonth, Temp, NRur, NUrb, CNP_0, InitSnow_0, Prec, Grow_0,
 
 
 def CNumPerv_2(NYrs, DaysMonth, Temp, NRur, NUrb, CNP_0, InitSnow_0, Prec, Grow_0, AntMoist_0):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     cnp = CNP_2(NRur, NUrb, CNP_0)
     water = Water_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     melt = Melt_1_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec)

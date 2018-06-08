@@ -1,6 +1,6 @@
 import numpy as np
 from Timer import time_function
-from NLU import NLU
+from NLU_function import NLU_function
 from Water import Water, Water_2
 from CNI import CNI, CNI_2
 from CNumImpervReten import CNumImpervReten, CNumImpervReten_2
@@ -10,7 +10,7 @@ from Memoization import memoize
 @memoize
 def QrunI(NYrs, DaysMonth, NRur, NUrb, Temp, InitSnow_0, Prec, CNI_0, AntMoist_0, Grow_0):
     result = np.zeros((NYrs, 12, 31, 16))  # TODO: should this be nlu?
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     cni = CNI(NRur, NUrb, CNI_0)
     c_num_imperv_reten = CNumImpervReten(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur, NUrb, CNI_0, Grow_0)
@@ -34,7 +34,7 @@ def QrunI(NYrs, DaysMonth, NRur, NUrb, Temp, InitSnow_0, Prec, CNI_0, AntMoist_0
 
 @memoize
 def QrunI_2(NYrs, DaysMonth, NRur, NUrb, Temp, InitSnow_0, Prec, CNI_0, AntMoist_0, Grow_0):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, 12, 31, nlu))
     water = np.repeat(Water_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec)[:, :, :, None], nlu, axis=3)
     TempE = np.repeat(Temp[:, :, :, None], nlu, axis=3)

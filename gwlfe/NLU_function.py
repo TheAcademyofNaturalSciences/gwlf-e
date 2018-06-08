@@ -2,7 +2,7 @@ from Memoization import memoize
 
 
 @memoize
-def NLU(NRur, NUrb):
+def NLU_function(NRur, NUrb):
     return NRur + NUrb
 
 

@@ -1,7 +1,7 @@
 import numpy as np
 from Timer import time_function
 from Memoization import memoize
-from NLU import NLU
+from NLU_function import NLU_function
 from LuTotNitr import LuTotNitr
 from LuTotNitr import LuTotNitr_2
 from RetentFactorN import RetentFactorN
@@ -13,7 +13,7 @@ def LuTotNitr_1(NYrs, NRur, NUrb, DaysMonth, InitSnow_0, Temp, Prec, AntMoist_0,
                 FirstManureMonth2, LastManureMonth2, SedDelivRatio_0, KF, LS, C, P, SedNitr, CNP_0, Imper, ISRR, ISRA,
                 Qretention, PctAreaInfil, LoadRateImp, LoadRatePerv, Storm, UrbBMPRed, FilterWidth, PctStrmBuf, Acoef,
                 CNI_0, Nqual, ShedAreaDrainLake, RetentNLake, AttenFlowDist, AttenFlowVel, AttenLossRateN):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, nlu))
     lu_tot_nitr = LuTotNitr(NYrs, DaysMonth, InitSnow_0, Temp, Prec, AntMoist_0, NRur, NUrb, CN, Grow_0,
                             Area, NitrConc, ManNitr, ManuredAreas, FirstManureMonth, LastManureMonth,
@@ -33,7 +33,7 @@ def LuTotNitr_1_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec, AntMoist_0, NRur, NUr
                   ManuredAreas, FirstManureMonth, LastManureMonth, FirstManureMonth2, LastManureMonth2, SedDelivRatio_0,
                   KF, LS, C, P, SedNitr, Acoef, ShedAreaDrainLake, RetentNLake, AttenFlowDist, AttenFlowVel,
                   AttenLossRateN):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((NYrs, nlu))
     lu_tot_nitr = LuTotNitr_2(NYrs, DaysMonth, InitSnow_0, Temp, Prec, AntMoist_0, NRur, NUrb, CN, Grow_0,
                               Area, NitrConc, ManNitr, ManuredAreas, FirstManureMonth, LastManureMonth,

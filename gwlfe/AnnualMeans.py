@@ -8,9 +8,9 @@ Imported from AnnualMeans.bas
 """
 
 import logging
-from Precipitation import AvPrecipitation_2
+from MultiUse_Fxns.AvPrecipitation import AvPrecipitation_2
 from AvEvapoTrans import AvEvapoTrans_2
-from PtSrcFlow import AvPtSrcFlow_2
+from MultiUse_Fxns.PtSrcFlow import AvPtSrcFlow_2
 from AvStreamBankEros import AvStreamBankEros_2
 from StreamBankN_1 import StreamBankN_1_2
 from AvTileDrain import AvTileDrain_2

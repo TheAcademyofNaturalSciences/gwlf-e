@@ -1,12 +1,12 @@
 import numpy as np
 from Timer import time_function
-from NLU import NLU
+from NLU_function import NLU_function
 from Memoization import memoize
 
 
 @memoize
 def NewCN(NRur, NUrb, CN):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((3, nlu))
     for l in range(NRur):
         result[0][l] = CN[l] / (2.334 - 0.01334 * CN[l])
@@ -19,7 +19,7 @@ def NewCN(NRur, NUrb, CN):
 # @jit(cache=True, nopython = True)
 @memoize
 def NewCN_2(NRur, NUrb, CN):
-    nlu = NLU(NRur, NUrb)
+    nlu = NLU_function(NRur, NUrb)
     result = np.zeros((3, nlu))
     result[0,:] = CN / (2.334 - 0.01334 * CN)
     result[2,:] = CN / (0.4036 + 0.0059 * CN)

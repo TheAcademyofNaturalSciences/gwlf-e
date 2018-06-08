@@ -1,6 +1,6 @@
 # from numba.pycc import CC
 import numpy as np
-from gwlfe import cc
+from . import cc
 # cc = CC('AMC5_yesterday_inner_compiled')
 
 @cc.export('AMC5_yesterday_inner','(int64, int32[:,::1], float64[::1], float64[:,:,::1])')
