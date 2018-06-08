@@ -11,7 +11,7 @@ from UrbAreaTotal import UrbAreaTotal_2
 from AreaTotal import AreaTotal_2
 
 try:
-    from AdjUrbanQTotal_2_inner_compiled import AdjUrbanQTotal_2_inner
+    from gwlfe_compiled import AdjUrbanQTotal_2_inner
 except ImportError:
     print("Unable to import compiled AdjUrbanQTotal_2_inner, using slower version")
     from AdjUrbanQTotal_2_inner import AdjUrbanQTotal_2_inner

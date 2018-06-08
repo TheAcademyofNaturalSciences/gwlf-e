@@ -1,7 +1,7 @@
-from numba.pycc import CC
+# from numba.pycc import CC
 import numpy as np
-
-cc = CC('CNum_inner_compiled')
+from gwlfe import cc
+# cc = CC('CNum_inner_compiled')
 
 @cc.export('CNum_inner','(int64,int32[:,::1],float64[:,:,::1],float64[::1],int64,float64[:,:,::1],float64[:,::1],float64[:,:,::1],boolean[::1],float64[:,:,::1])')
 def CNum_inner(NYrs, DaysMonth, Temp, CN, NRur, melt_pest, newcn, amc5, grow_factor, water):

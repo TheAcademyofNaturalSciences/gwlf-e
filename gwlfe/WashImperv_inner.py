@@ -1,8 +1,8 @@
-from numba.pycc import CC
+# from numba.pycc import CC
 import numpy as np
 import math
 
-cc = CC('WashImperv_inner_compiled')
+# cc = CC('WashImperv_inner_compiled')
 
 
 @cc.export('WashImperv_inner',

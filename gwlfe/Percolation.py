@@ -6,7 +6,7 @@ from ET import DailyET_2
 from Memoization import memoize
 
 try:
-    from Percolation_inner_compiled import Percolation_inner
+    from gwlfe_compiled import Percolation_inner
 except ImportError:
     print("Unable to import compiled Percolation_inner, using slower version")
     from Percolation_inner import Percolation_inner

@@ -1,8 +1,8 @@
 import numpy as np
-from numba.pycc import CC
+# from numba.pycc import CC
 
-cc = CC('AdjUrbanQTotal_2_inner_compiled')
-
+# cc = CC('AdjUrbanQTotal_2_inner_compiled')
+from gwlfe import cc
 
 @cc.export('AdjUrbanQTotal_2_inner',
            '(int64, int32[:,::1], float64[:,:,::1], float64, float64, float64[:,:,::1], float64[:,:,::1], float64, float64)')

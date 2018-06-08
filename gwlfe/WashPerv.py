@@ -9,7 +9,7 @@ from QrunP import QrunP
 from QrunP import QrunP_2
 
 try:
-    from WashPerv_inner_compiled import WashPerv_inner
+    from gwlfe_compiled import WashPerv_inner
 except ImportError:
     print("Unable to import compiled WashPerv_inner, using slower version")
     from WashPerv_inner import WashPerv_inner

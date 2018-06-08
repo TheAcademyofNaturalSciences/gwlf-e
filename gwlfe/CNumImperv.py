@@ -11,7 +11,7 @@ from Memoization import memoize
 from DailyArrayConverter import get_value_for_yesterday
 
 try:
-    from CNumImperv_2_inner_compiled import CNumImperv_2_inner
+    from gwlfe_compiled import CNumImperv_2_inner
 except ImportError:
     print("Unable to import compiled CNumImper_2_inner, using slower version")
     from CNumImperv_2_inner import CNumImperv_2_inner

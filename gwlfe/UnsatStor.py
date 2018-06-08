@@ -6,7 +6,7 @@ from ET import DailyET_2
 from Memoization import memoize
 
 try:
-    from UnsatStor_inner_compiled import UnsatStor_inner
+    from gwlfe_compiled import UnsatStor_inner
 except ImportError:
     print("Unable to import compiled UnsatStor_inner, using slower version")
     from UnsatStor_inner import UnsatStor_inner

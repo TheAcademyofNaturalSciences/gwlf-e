@@ -5,7 +5,7 @@ from Percolation import Percolation_2
 from Memoization import memoize
 
 try:
-    from DeepSeep_inner_compiled import DeepSeep_inner
+    from gwlfe_compiled import DeepSeep_inner
 except ImportError:
     print("Unable to import compiled DeepSeep_inner, using slower version")
     from DeepSeep_inner import DeepSeep_inner

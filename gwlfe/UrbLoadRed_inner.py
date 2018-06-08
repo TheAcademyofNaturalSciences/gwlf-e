@@ -1,7 +1,7 @@
-from numba.pycc import CC
+# from numba.pycc import CC
 import numpy as np
 
-cc = CC('UrbLoadRed_inner_compiled')
+# cc = CC('UrbLoadRed_inner_compiled')
 
 @cc.export('UrbLoadRed_inner', '(int64, int32[:,::1], float64[:,:,::1], int64, int64, int64, float64[:,::1], float64[:,:,::1], float64[:,:,::1], int64)')
 def UrbLoadRed_inner(NYrs, DaysMonth, Temp,  NRur, Nqual, Storm, UrbBMPRed, water, adjurbanqtotal, nlu):

@@ -11,7 +11,7 @@ from AMC5 import AMC5, AMC5_yesterday
 from Memoization import memoize
 
 try:
-    from CNumPerv_2_inner_compiled import CNumPerv_2_inner
+    from gwlfe_compiled import CNumPerv_2_inner
 except ImportError:
     print("Unable to import compiled CNumPerv_2_inner, using slower version")
     from CNumPerv_2_inner import CNumPerv_2_inner

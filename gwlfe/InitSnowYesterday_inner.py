@@ -1,8 +1,8 @@
 import numpy as np
-from numba.pycc import CC
+# from numba.pycc import CC
 
-cc = CC('InitSnowYesterday_inner_compiled')
-
+# cc = CC('InitSnowYesterday_inner_compiled')
+from gwlfe import cc
 
 @cc.export('InitSnowYesterday_inner', '(int64, int32[:,::1], int64, float64[:,:,::1], float64[:,:,::1])')
 def InitSnowYesterday_inner(NYrs, DaysMonth, InitSnow_0, Temp, Prec):

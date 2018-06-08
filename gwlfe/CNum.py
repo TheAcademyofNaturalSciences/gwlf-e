@@ -12,7 +12,7 @@ from Melt_1 import Melt_1_2
 from Memoization import memoize
 
 try:
-    from CNum_inner_compiled import CNum_inner
+    from gwlfe_compiled import CNum_inner
 except ImportError:
     print("Unable to import compiled CNum_inner, using slower version")
     from CNum_inner import CNum_inner

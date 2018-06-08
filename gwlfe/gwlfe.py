@@ -32,6 +32,10 @@ from AvRunoff import AvRunoff_2
 from LuTotNitr import LuTotNitr_2
 from LuTotPhos import LuTotPhos_2
 
+from numba.pycc import CC
+
+cc = CC("gwlfe_compiled")
+
 log = logging.getLogger(__name__)
 
 

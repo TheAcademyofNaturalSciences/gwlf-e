@@ -1,7 +1,7 @@
-from numba.pycc import CC
+# from numba.pycc import CC
 import numpy as np
-
-cc = CC('CNumImperv_2_inner_compiled')
+from gwlfe import cc
+# cc = CC('CNumImperv_2_inner_compiled')
 
 @cc.export('CNumImperv_2_inner',
            '(int64, int64, int32[:,::1], float64[:,:,::1], int64, float64[:,::1], float64[:,:,::1], float64[:,:,::1], float64[::1], float64[:,:,::1])')
