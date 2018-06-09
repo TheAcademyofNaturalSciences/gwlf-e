@@ -5,8 +5,8 @@ from Flow import Flow_2
 from Runoff import Runoff
 from Runoff import Runoff_2
 from GroundWatLE_2 import GroundWatLE_2
-from PtSrcFlow import PtSrcFlow
-from PtSrcFlow import PtSrcFlow_2
+from MultiUse_Fxns.PtSrcFlow import PtSrcFlow
+from MultiUse_Fxns.PtSrcFlow import PtSrcFlow_2
 from TileDrain import TileDrain
 from TileDrain import TileDrain_2
 from Withdrawal import Withdrawal
