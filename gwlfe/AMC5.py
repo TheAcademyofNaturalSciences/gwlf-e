@@ -3,12 +3,7 @@ from Timer import time_function
 from Water import Water, Water_2
 import copy
 from Memoization import memoize
-
-try:
-    from AMC5_yesterday_inner_compiled import AMC5_yesterday_inner
-except ImportError:
-    print("Unable to import compiled AMC5_yesterday_inner, using slower version")
-    from AMC5_yesterday_inner import AMC5_yesterday_inner
+from AMC5_yesterday_inner import AMC5_yesterday_inner
 
 
 # AMC5_yesterday returns the same value as yesterday(AMC5) and faster than any other version

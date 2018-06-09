@@ -1,12 +1,12 @@
-from numba.pycc import CC
+# from numba.pycc import CC
 import numpy as np
 import math
 
-cc = CC('WashImperv_inner_compiled')
+# cc = CC('WashImperv_inner_compiled')
 
 
-@cc.export('WashImperv_inner',
-           '(int64, int32[:,::1], float64[:,:,::1], int64, int64, float64[:,:,::1], float64[:,:,:,::1])')
+# @cc.export('WashImperv_inner',
+#            '(int64, int32[:,::1], float64[:,:,::1], int64, int64, float64[:,:,::1], float64[:,:,:,::1])')
 def WashImperv_inner(NYrs, DaysMonth, Temp, NRur, nlu, water, qruni):
     result = np.zeros((NYrs, 12, 31, 16))
     impervaccum = np.zeros(16)

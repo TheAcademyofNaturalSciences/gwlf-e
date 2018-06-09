@@ -1,4 +1,3 @@
-from numba import jit
 import numpy as np
 import math
 import numpy.ma as ma
@@ -91,7 +90,7 @@ def ymd_to_daily_slow(ymd_array, NYrs, DaysMonth):
     return np.array(result)
 
 
-@jit(cache=True, nopython=True)
+# @jit(cache=True, nopython=True)
 def get_value_for_yesterday(variable, variable_0, Y_in, i_in, j_in, NYrs, DaysMonth):
     yesterday = variable_0
     for Y in range(NYrs):
@@ -103,7 +102,7 @@ def get_value_for_yesterday(variable, variable_0, Y_in, i_in, j_in, NYrs, DaysMo
                     yesterday = variable[Y][i][j]
 
 
-@jit(cache=True, nopython=True)
+# @jit(cache=True, nopython=True)
 def get_value_for_yesterday_yesterday(variable, variable_0, Y_in, i_in, j_in, NYrs, DaysMonth):
     yesterday_yesterday = variable_0
     yesterday = 0
@@ -117,7 +116,7 @@ def get_value_for_yesterday_yesterday(variable, variable_0, Y_in, i_in, j_in, NY
                     yesterday = variable[Y][i][j]
 
 
-@jit(cache=True, nopython=True)
+# @jit(cache=True, nopython=True)
 def get_value_for_yesterday_yesterday_yesterday(variable, variable_0, Y_in, i_in, j_in, NYrs, DaysMonth):
     yesterday_yesterday_yesterday = variable_0
     yesterday_yesterday = 0

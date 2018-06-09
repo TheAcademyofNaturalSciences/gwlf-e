@@ -1,6 +1,6 @@
 import numpy as np
 from Timer import time_function
-from DailyArrayConverter import get_value_for_yesterday
+from MultiUse_Fxns.DailyArrayConverter import get_value_for_yesterday
 from NLU import NLU
 from Water import Water, Water_2
 from CNP import CNP, CNP_2
@@ -8,14 +8,8 @@ from Melt import Melt, Melt_2
 from Melt_1 import Melt_1_2
 from GrowFactor import GrowFactor
 from AMC5 import AMC5, AMC5_yesterday
+from CNumPerv_2_inner import CNumPerv_2_inner
 from Memoization import memoize
-
-try:
-    from CNumPerv_2_inner_compiled import CNumPerv_2_inner
-except ImportError:
-    print("Unable to import compiled CNumPerv_2_inner, using slower version")
-    from CNumPerv_2_inner import CNumPerv_2_inner
-
 
 @memoize
 def CNumPerv(NYrs, DaysMonth, Temp, NRur, NUrb, CNP_0, InitSnow_0, Prec, Grow_0, AntMoist_0):

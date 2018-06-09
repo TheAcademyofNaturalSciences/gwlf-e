@@ -10,7 +10,7 @@ from Memoization import memoize
 def Retention(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur, NUrb, CN, Grow_0):
     nlu = NLU(NRur, NUrb)
     result = np.zeros((NYrs, 12, 31, nlu)) # Why nlu ?
-    c_num = CNum(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, CN, NRur, NUrb, Grow_0)
+    c_num = CNum_2(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, CN, NRur, NUrb, Grow_0)#t
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     for Y in range(NYrs):
         for i in range(12):

@@ -7,11 +7,7 @@ from Water import Water
 from Water import Water_2
 from QrunI import QrunI
 from QrunI import QrunI_2
-try:
-    from WashImperv_inner_compiled import WashImperv_inner
-except ImportError:
-    print("Unable to import compiled WashPerv_inner, using slower version")
-    from WashImperv_inner import WashImperv_inner
+from WashImperv_inner import WashImperv_inner
 
 
 @memoize

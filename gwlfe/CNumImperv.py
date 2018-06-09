@@ -8,14 +8,8 @@ from Melt_1 import Melt_1_2
 from GrowFactor import GrowFactor
 from AMC5 import AMC5, AMC5_yesterday
 from Memoization import memoize
-from DailyArrayConverter import get_value_for_yesterday
-
-try:
-    from CNumImperv_2_inner_compiled import CNumImperv_2_inner
-except ImportError:
-    print("Unable to import compiled CNumImper_2_inner, using slower version")
-    from CNumImperv_2_inner import CNumImperv_2_inner
-
+from MultiUse_Fxns.DailyArrayConverter import get_value_for_yesterday
+from CNumImperv_2_inner import CNumImperv_2_inner
 
 @memoize
 def CNumImperv(NYrs, NRur, NUrb, DaysMonth, InitSnow_0, Temp, Prec, CNI_0, Grow_0, AntMoist_0):

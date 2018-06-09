@@ -1,9 +1,9 @@
-from numba.pycc import CC
+# from numba.pycc import CC
 import numpy as np
 
-cc = CC('CNumPerv_2_inner_compiled')
+# cc = CC('CNumPerv_2_inner_compiled')
 
-@cc.export('CNumPerv_2_inner', '(int64, int32[:,::1], float64[:,:,::1], int64, int64, float64[:,::1], float64[:,:,::1], float64[:,:,::1], float64[::1], float64[:,:,::1])')
+# @cc.export('CNumPerv_2_inner', '(int64, int32[:,::1], float64[:,:,::1], int64, int64, float64[:,::1], float64[:,:,::1], float64[:,:,::1], float64[::1], float64[:,:,::1])')
 def CNumPerv_2_inner(NYrs, DaysMonth, Temp, NRur, nlu, cnp, water, melt, grow_factor, amc5):
     result = np.zeros((NYrs, 12, 31, nlu))
     for Y in range(NYrs):

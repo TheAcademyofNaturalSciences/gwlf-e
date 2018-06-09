@@ -1,10 +1,10 @@
-from numba.pycc import CC
+# from numba.pycc import CC
 import numpy as np
 
-cc = CC('UnsatStor_inner_compiled')
+# cc = CC('UnsatStor_inner_compiled')
 
 
-@cc.export('UnsatStor_inner', '(int64,int32[:,::1],float64,float64,float64[:,:,::1],float64[:,:,::1])')
+# @cc.export('UnsatStor_inner', '(int64,int32[:,::1],float64,float64,float64[:,:,::1],float64[:,:,::1])')
 def UnsatStor_inner(NYrs, DaysMonth, MaxWaterCap, UnsatStor_0, infiltration, et):
     result = np.zeros((NYrs, 12, 31))
     unsatstor_carryover = UnsatStor_0

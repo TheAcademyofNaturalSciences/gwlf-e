@@ -1,12 +1,7 @@
 import numpy as np
 from Timer import time_function
 from Memoization import memoize
-
-try:
-    from InitSnow_2_inner_compiled import InitSnow_2_inner
-except ImportError:
-    print("Unable to import compiled InitSnow_inner, using slower version")
-    from InitSnow_inner import InitSnow_2_inner
+from InitSnow_inner import InitSnow_2_inner
 
 
 # @memoize

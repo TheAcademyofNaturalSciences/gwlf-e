@@ -10,7 +10,7 @@ from Memoization import memoize
 @memoize
 def CNumPervReten(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur, NUrb, CNP_0, Grow_0):
     cnp = CNP(NRur, NUrb, CNP_0)
-    c_num_perv = CNumPerv(NYrs, DaysMonth, Temp, NRur, NUrb, CNP_0, InitSnow_0, Prec, Grow_0, AntMoist_0)
+    c_num_perv = CNumPerv_2(NYrs, DaysMonth, Temp, NRur, NUrb, CNP_0, InitSnow_0, Prec, Grow_0, AntMoist_0)
     nlu = NLU(NRur, NUrb)
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     result = np.zeros((NYrs, 12, 31, nlu))

@@ -9,12 +9,7 @@ from Water import Water_2
 from UrbanQTotal import UrbanQTotal_2
 from UrbAreaTotal import UrbAreaTotal_2
 from AreaTotal import AreaTotal_2
-
-try:
-    from AdjUrbanQTotal_2_inner_compiled import AdjUrbanQTotal_2_inner
-except ImportError:
-    print("Unable to import compiled AdjUrbanQTotal_2_inner, using slower version")
-    from AdjUrbanQTotal_2_inner import AdjUrbanQTotal_2_inner
+from AdjUrbanQTotal_2_inner import AdjUrbanQTotal_2_inner
 
 
 # @time_function
@@ -34,9 +29,8 @@ def AdjUrbanQTotal(NYrs, DaysMonth, Temp, InitSnow_0, Prec, NRur, NUrb, Area, CN
             for j in range(DaysMonth[Y][i]):
                 if Temp[Y][i][j] > 0 and water[Y][i][j] > 0.01:
                     if water[Y][i][j] < 0.05:
-                        ## z.adj_urban_q_total = get_value_for_yesterday(z.adj_urban_q_total_1,0,Y,i,j,z.NYrs,z.DaysMonth)
-                        adj_urban_q_total *= urb_area_total / area_total
-                        # pass
+                        # z.adj_urban_q_total = get_value_for_yesterday(z.adj_urban_q_total_1,0,Y,i,j,z.NYrs,z.DaysMonth)
+                        pass
                     else:
                         adj_urban_q_total = urban_q_total[Y][i][j]
                         if Qretention > 0:
@@ -45,10 +39,10 @@ def AdjUrbanQTotal(NYrs, DaysMonth, Temp, InitSnow_0, Prec, NRur, NUrb, Area, CN
                                     adj_urban_q_total = 0
                                 else:
                                     adj_urban_q_total = urban_q_total[Y][i][j] - Qretention * PctAreaInfil
-                    # if urb_area_total > 0:
-                    #     adj_urban_q_total = adj_urban_q_total * urb_area_total / area_total
-                    # else:
-                    #     adj_urban_q_total = 0
+                    if urb_area_total > 0:
+                        adj_urban_q_total = adj_urban_q_total * urb_area_total / area_total
+                    else:
+                        adj_urban_q_total = 0
                 else:
                     pass
                 result[Y][i][j] = adj_urban_q_total

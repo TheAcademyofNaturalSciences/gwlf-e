@@ -11,7 +11,7 @@ from Memoization import memoize
 def CNumImpervReten(NYrs, DaysMonth, Temp, Prec, InitSnow_0, AntMoist_0, NRur, NUrb, CNI_0,
                     Grow_0):  # TODO: this is exactly the same as perv and retention
     cni = CNI(NRur, NUrb, CNI_0)
-    c_num_imperv = CNumImperv(NYrs, NRur, NUrb, DaysMonth, InitSnow_0, Temp, Prec, CNI_0, Grow_0, AntMoist_0)
+    c_num_imperv = CNumImperv_2(NYrs, NRur, NUrb, DaysMonth, InitSnow_0, Temp, Prec, CNI_0, Grow_0, AntMoist_0)
     nlu = NLU(NRur, NUrb)
     water = Water(NYrs, DaysMonth, InitSnow_0, Temp, Prec)
     result = np.zeros((NYrs, 12, 31, nlu))
