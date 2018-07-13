@@ -1,7 +1,11 @@
 from numba.pycc import CC
 from numpy import zeros
+from gwlfe.MultiUse_Fxns.DummyCC import DummyCC
 
-cc = CC('AMC5_yesterday_inner_compiled')
+try:
+    cc = CC('AMC5_yesterday_inner_compiled')
+except RuntimeError:
+    cc = DummyCC()
 
 
 @cc.export('AMC5_yesterday_inner', '(int64, int64[:,::1], float64[::1], float64[:,:,::1])')

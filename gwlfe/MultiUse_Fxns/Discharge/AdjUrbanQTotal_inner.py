@@ -1,7 +1,11 @@
 from numba.pycc import CC
 from numpy import zeros
+from gwlfe.MultiUse_Fxns.DummyCC import DummyCC
 
-cc = CC('AdjUrbanQTotal_inner_compiled')
+try:
+    cc = CC('AdjUrbanQTotal_inner_compiled')
+except RuntimeError:
+    cc = DummyCC()
 
 
 @cc.export('AdjUrbanQTotal_inner',

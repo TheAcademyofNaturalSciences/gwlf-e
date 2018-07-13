@@ -1,7 +1,11 @@
 from numba.pycc import CC
 from numpy import zeros
+from gwlfe.MultiUse_Fxns.DummyCC import DummyCC
 
-cc = CC('CNumPerv_inner_compiled')
+try:
+    cc = CC('CNumPerv_inner_compiled')
+except RuntimeError:
+    cc = DummyCC()
 
 
 @cc.export('CNumPerv_inner',
