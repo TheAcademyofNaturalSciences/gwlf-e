@@ -29,8 +29,8 @@ def main():
 
     fp = open(gms_filename, 'r')
     z = Parser.GmsReader(fp).read()
-    start = time.time()
     result, z = gwlfe.run(z)
+    print(json.dumps(result, indent=4))
     if (args.output != None):  # gms out filename is sepcified so write
         gmsout_filename = args.output
         log.debug("Writing GMS output file (%s)" % (gmsout_filename))
