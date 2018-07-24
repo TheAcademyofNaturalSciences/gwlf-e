@@ -1,6 +1,7 @@
 import csv
 import os
 import unittest
+import json
 from StringIO import StringIO
 from itertools import izip
 
@@ -11,6 +12,23 @@ from gwlfe import gwlfe
 
 
 class TestGMSWriter(unittest.TestCase):
+    """
+    Tests model generated output versus known
+    static output.
+    """
+    def test_generated_output_matches_static_output(self):
+        """
+        Test generated output using the sample GMS, input_4.gms
+        versus static output generated using the same file.
+        """
+        input_file = open('test/input_4.gms', 'r')
+        z = Parser.GmsReader(input_file).read()
+        generated_output = gwlfe.run(z)
+
+        static_output = json.load(open('test/input_4.output', 'r'))
+
+        self.assertEqual(generated_output, static_output)
+
     def test_gms_writer(self):
         """
         Test that GmsWriter is able to replicate the sample GMS created
