@@ -4,7 +4,12 @@ from numba.pycc import CC
 from numpy import exp
 from numpy import zeros
 
-cc = CC('WashImperv_inner_compiled')
+from gwlfe.MultiUse_Fxns.DummyCC import DummyCC
+
+try:
+    cc = CC('WashImperv_inner_compiled')
+except RuntimeError:
+    cc = DummyCC()
 
 
 @cc.export('WashImperv_inner',

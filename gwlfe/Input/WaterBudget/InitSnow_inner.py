@@ -1,7 +1,11 @@
 from numba.pycc import CC
 from numpy import zeros
+from gwlfe.MultiUse_Fxns.DummyCC import DummyCC
 
-cc = CC('InitSnow_f_inner_compiled')
+try:
+    cc = CC('InitSnow_f_inner_compiled')
+except RuntimeError:
+    cc = DummyCC()
 
 
 @cc.export('InitSnow_f_inner', '(int64, int64[:,::1], int64, float64[:,:,::1], float64[:,:,::1])')

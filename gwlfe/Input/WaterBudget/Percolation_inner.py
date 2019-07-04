@@ -1,7 +1,11 @@
 from numba.pycc import CC
 from numpy import zeros
+from gwlfe.MultiUse_Fxns.DummyCC import DummyCC
 
-cc = CC('Percolation_inner_compiled')
+try:
+    cc = CC('Percolation_inner_compiled')
+except RuntimeError:
+    cc = DummyCC()
 
 
 @cc.export('Percolation_inner', '(int64, float64, int64[:,::1], float64, float64[:,:,::1], float64[:,:,::1])')

@@ -3,8 +3,12 @@ import math
 from numba.pycc import CC
 from numpy import exp
 from numpy import zeros
+from gwlfe.MultiUse_Fxns.DummyCC import DummyCC
 
-cc = CC('WashPerv_inner_compiled')
+try:
+    cc = CC('WashPerv_inner_compiled')
+except RuntimeError:
+    cc = DummyCC()
 
 
 @cc.export('WashPerv_inner',

@@ -1,7 +1,11 @@
 from numba.pycc import CC
 from numpy import zeros
+from gwlfe.MultiUse_Fxns.DummyCC import DummyCC
 
-cc = CC('UnsatStor_inner_compiled')
+try:
+    cc = CC('UnsatStor_inner_compiled')
+except RuntimeError:
+    cc = DummyCC()
 
 
 @cc.export('UnsatStor_inner', '(int64,int64[:,::1],float64,float64,float64[:,:,::1],float64[:,:,::1])')
